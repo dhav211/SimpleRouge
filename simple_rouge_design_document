@@ -1,0 +1,85 @@
+---Simple Rouge---
+
+---What is it?---
+    Simple Rouge is a rudimentary rougelike that can be completed in 15 minutes and with very little challenge. The combat system will simply be click on enemy to attack with weapon. Only other actions available is using a potion, which there will be multiple potions, some good some bad. The only stats available are strength and defense. The only equipment available are swords and armor. Enemy AI will be simple as well, when player is seen, come towards him and fight til the death.
+
+---Order of Execution---
+-1. Player Movement
+-2. Player and Enemy Stats
+-3. Map Generation - Part 1
+-4. Turn System
+-5. Enemy AI
+6. Battle System
+7. Camera Control
+8. Chests, Doors, And Keys
+9. Potions
+10. UI
+11. Console
+12. Equipment
+13. Map Generation - Part 2
+14. Enemy AI - Part 2
+15. Fog of War
+16. Saving and Loading
+17. Game Over and Main Menu
+18. Finalization and Distrubtion
+
+--Detailed Steps--
+
+-- Player Movement--
+1. Create a player scene. 
+2. Create a tile class and simply spawn a 10x10 tile grid for player to move on.
+3. Player movement with mouse control.
+4. when player clicks on a tile get that tiles grid location.
+5. Set up path finding to move from player position to tile location
+
+-- Player and Enemy Stats --
+1. Create a basic enemy, all other enemies will inherit from this one.
+2. Set enemy sprite as an enemy from tile sheet.
+3. Create a class called stats. It will contain strength and defense.
+4. Attach this script to player and enemy.
+
+-- Dungeon Generation - Part 1 --
+
+This step has already been completed, just spawn a 10x10 room.
+More sophiscated Generation, with halls and multple rooms will be established in part 2.
+
+-- Turn System --
+1. Create a singleton that manages the turns.
+2. Create a list of of Node2Ds
+3. When the player spawns add it to the list.
+4. When enemy spawns. Add it to the list.
+5. When an enemy dies, remove it from the list.
+6. Make a function that clears list on changing of rooms.
+7. For main use of of this turn manager, have an async function that cycles thru the node2d list.
+8. Each enemy and player will have a turn_completed signal that will emit after each turn.
+9. when this signal is emitted, the for loop will cycle forward.
+10. Each step of this forloop will check if it's an enemy or player.
+11. If player then wait for player to make an action.
+12. If enemy, then run the enemy ai function in the enemy script
+
+-- Enemy AI --
+1. Have enemy wander about randomly, if not sleeping.
+2. Create a field of view algorithm so it can detect the player.
+3. If player is detected, chase the player.
+
+-- Enemy AI - Part 2 --
+1. Extract all AI bits from enemy.cs and put it in a script called enemyAI.cs.
+2. There will be 3 types of AI
+	- Aggressive: Attack enemy on sight and don't quit until dead.
+	- Cowardly: Will flee battle when weakened, will also shout for other enemies nearby.
+	- Healer: Will check nearby enemies and if their HP is low, then it will heal. Will also flee battle.
+3. Enable a sleep mode for enemies. They will wake up if player is nearby. Also have them fall alseep when wandering.
+4. For sleep mode, set variables for likelyhood to fall asleep and how hard they sleep.
+
+-- Battle System --
+1. Since battle system is very simple, just one attack, we will just need one attack script that can be attached to player and enemy.
+2. In attack script there is a method that is a void, it's parameters is attacker and target.
+3. Simply do the damage calculation and then subtract that calculation from target's health.
+4. This method will be called in the enemies run AI method. For the player it will be done when player walks into an enemy.
+
+-- Camera Control --
+1. If mouse is near the edge of the screen then scroll the camera that direction.
+2. If player moves in any way, then move the camera to be centered on player.
+
+-- Doors, Keys, and Chests --
+

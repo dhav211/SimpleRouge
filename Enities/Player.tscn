@@ -1,0 +1,38 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Enities/Player.cs" type="Script" id=1]
+[ext_resource path="res://tilesheet.png" type="Texture" id=2]
+[ext_resource path="res://Enities/Stats.cs" type="Script" id=3]
+[ext_resource path="res://Enities/MovementCursor.cs" type="Script" id=4]
+[ext_resource path="res://Enities/PlayerInput.cs" type="Script" id=5]
+[ext_resource path="res://Scripts/FieldOfView.cs" type="Script" id=6]
+[ext_resource path="res://Scripts/Square.tscn" type="PackedScene" id=7]
+
+[node name="Player" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 459, 0, 16, 16 )
+
+[node name="Stats" type="Node2D" parent="."]
+script = ExtResource( 3 )
+Health = 15
+Strength = 5
+Defense = 4
+
+[node name="MovementCursor" type="Sprite" parent="."]
+position = Vector2( 0, 16 )
+rotation = 3.14159
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 391, 340, 16, 16 )
+script = ExtResource( 4 )
+
+[node name="PlayerInput" type="Node2D" parent="."]
+script = ExtResource( 5 )
+
+[node name="FieldOfView" type="Node2D" parent="."]
+script = ExtResource( 6 )
+viewSquare = ExtResource( 7 )

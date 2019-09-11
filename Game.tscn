@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Game.cs" type="Script" id=1]
+[ext_resource path="res://Enities/Scorpion.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Dungeon/Grid.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Enities/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scripts/TurnTimer.cs" type="Script" id=5]
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 1 )
+scorpionScene = ExtResource( 2 )
+
+[node name="Grid" parent="." instance=ExtResource( 3 )]
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+position = Vector2( 16, 16 )
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
+
+[node name="TurnTimer" type="Timer" parent="."]
+wait_time = 0.1
+script = ExtResource( 5 )
+[connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]

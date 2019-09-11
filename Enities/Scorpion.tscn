@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Enities/Enemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/Square.tscn" type="PackedScene" id=2]
+
+[node name="Scorpion" index="0" instance=ExtResource( 1 )]
+squareScene = ExtResource( 2 )
+
+[node name="Sprite" parent="." index="0"]
+region_rect = Rect2( 408, 85, 16, 16 )
+
+[node name="Stats" parent="." index="1"]
+Health = 8
+Strength = 4
+Defense = 2
