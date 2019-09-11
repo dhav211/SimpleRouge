@@ -8,6 +8,7 @@ public class PlayerInput : Node2D
     TurnManager turnManager;
     MovementCursor movementCursor;
     Grid grid;
+    Attack attack = new Attack();
 
     public override void _Ready()
     {
@@ -43,6 +44,7 @@ public class PlayerInput : Node2D
                 else  // Position is occupied
                 {
                     InteractWithTileOccupant(positionToMove);
+                    turnManager.EmitSignal("turn_completed");
                     // TODO this will later battle enemies, open chests, and pick up keys
                 }
             }
@@ -66,8 +68,9 @@ public class PlayerInput : Node2D
         if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Enemy)
         {
             Enemy occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Enemy;
-            GD.Print("Attack " + occupant.Name + "!!!");
+            attack.AttackTarget(player, occupant);
         } 
+        // TODO add interaction with doors, chests, items, etc here
     }
 
     private bool IsPositionWalkable(Vector2 _moveToPosition)

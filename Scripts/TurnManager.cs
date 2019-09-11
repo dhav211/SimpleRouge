@@ -53,7 +53,6 @@ public class TurnManager : Node
                         player = turns[i] as Player;
                     
                     player.StartTurn();
-                    //await ToSignal(this.TurnCompleted(), "completed");
                     await ToSignal(this, "turn_completed");
                     timer.Start();
                     await ToSignal(timer, "timeout");
@@ -62,6 +61,10 @@ public class TurnManager : Node
                 else if (turns[i] is Enemy)
                 {
                     enemy = turns[i] as Enemy;
+
+                    if (!enemy.IsAlive)
+                        continue;
+
                     enemy.RunAI();
                     enemy = null;
                     timer.Start();

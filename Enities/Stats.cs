@@ -7,4 +7,9 @@ public class Stats : Node2D
     [Export] public int Strength { get; set; }
     [Export] public int Defense { get; set; }
     public int CurrentHealth { get; set; }
+
+    public override void _Ready()
+    {
+        CurrentHealth = Health;
+    }
 }

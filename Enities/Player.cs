@@ -7,7 +7,7 @@ public class Player : Node2D
     Vector2 gridPosition = new Vector2();
     List<Vector2> pathToFollow = new List<Vector2>();
 
-    Stats stats = new Stats();
+    Stats stats;
     TurnManager turnManager;
     Grid grid;
     PlayerInput playerInput;
@@ -18,12 +18,18 @@ public class Player : Node2D
         get { return gridPosition; }
     }
 
+    public Stats Stats
+    {
+        get { return stats; }
+    }
+
     public override void _Ready()
     {
         grid = GetTree().GetRoot().GetNode("Game/Grid") as Grid;
         turnManager = GetNode("/root/TurnManager") as TurnManager;
         movementCursor = GetNode("MovementCursor") as MovementCursor;
         playerInput = GetNode("PlayerInput") as PlayerInput;
+        stats = GetNode("Stats") as Stats;
 
         turnManager.Turns.Add(this);
     }

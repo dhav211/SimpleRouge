@@ -10,7 +10,6 @@ public class TurnTimer : Timer
 
     private void _on_TurnTimer_timeout()
     {
-        GD.Print("The timer has finished");
         Stop();
     }
 }

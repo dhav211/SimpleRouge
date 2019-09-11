@@ -8,6 +8,7 @@ public class Enemy : Node2D
     private EnemyState currentEnemyState = EnemyState.Wandering;
 
     Vector2 gridPosition = new Vector2();
+    bool isAlive = true;
     [Export] int viewDistance = 8;
     [Export] PackedScene squareScene;  // TODO delete this
 
@@ -16,6 +17,18 @@ public class Enemy : Node2D
     Grid grid;
     Player player;
     Game game;
+    Stats stats;
+    Attack attack = new Attack();
+
+    public Stats Stats
+    {
+        get { return stats; }
+    }
+
+    public bool IsAlive
+    {
+        get { return isAlive; }
+    }
 
     public override void _Ready()
     {
@@ -23,6 +36,7 @@ public class Enemy : Node2D
         grid = GetTree().GetRoot().GetNode("Game/Grid") as Grid;
         game = GetTree().GetRoot().GetNode("Game") as Game;
         player = GetTree().GetRoot().GetNode("Game/Player") as Player;
+        stats = GetNode("Stats") as Stats;
         turnManager.Turns.Add(this);
         pathfinding.InitializePathfinding(grid, player);
 
@@ -55,7 +69,7 @@ public class Enemy : Node2D
         {
             if (IsPlayerNearby())
             {
-                GD.Print(Name + " is attacking the player!");
+                attack.AttackTarget(this, player);
             }
             else
             {
@@ -226,6 +240,26 @@ public class Enemy : Node2D
                 hasFoundSpawnLocation = true;
             }
         }
+    }
+
+    public void CheckIfAlive()
+    {
+        // Checks if enemy is still alive, if it has died, this will play the death animation, which after animation, the enemy will be made invisble.
+        if (stats.CurrentHealth <= 0)
+        {
+            isAlive = false;
+            AnimationPlayer anim = GetNode("AnimationPlayer") as AnimationPlayer;
+            anim.Play("Death");
+        }
+    }
+
+    public void RemoveEnemy()
+    {
+        // Doesn't actually remove enemy fully. Just makes it invisible and removes it from tile grid.
+        // Function is called within the animation player, right at the end of the Death animation
+        Visible = false;
+        grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = false; // sets isOccupied on old grid position on tileGrid to true
+        grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = null;
     }
 
     private void _on_Enemy_turn_completed()
