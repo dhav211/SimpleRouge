@@ -9,19 +9,20 @@
 -3. Map Generation - Part 1
 -4. Turn System
 -5. Enemy AI
-6. Battle System
+-6. Battle System
 7. Camera Control
 8. Chests, Doors, And Keys
 9. Potions
-10. UI
-11. Console
-12. Equipment
-13. Map Generation - Part 2
-14. Enemy AI - Part 2
-15. Fog of War
-16. Saving and Loading
-17. Game Over and Main Menu
-18. Finalization and Distrubtion
+10. Equipment
+11. Leveling up
+12. UI / Inventory System
+13. Console
+14. Map Generation - Part 2
+15. Enemy AI - Part 2
+16. Fog of War
+17. Saving and Loading
+18. Game Over and Main Menu
+19. Finalization and Distrubtion
 
 --Detailed Steps--
 
@@ -82,4 +83,39 @@ More sophiscated Generation, with halls and multple rooms will be established in
 2. If player moves in any way, then move the camera to be centered on player.
 
 -- Doors, Keys, and Chests --
+1. Start off by making a dummy inventory system. Basically just a list of Items, which before this you should make a base item with an item script.
+2. Create a chest that can be opened by player, this will set a bool and change the sprite to be an opened chest.
+3. Next, add an ItemContained variable to chest, this will be a packed scene, however when chest is opened it doesn't need to be added as child, just add the object to the list.
+4. Create a door that when the player walks into it, it will disappear.
+5. The next step will be a locked door. It will work off the same script, just add an enum for Lock State.
+6. When player walks into locked door it will go thru inventory, if player poesses the correct key, then the door will disappear and key is removed from inventory.
+
+-- Potions --
+1. Potions will only raise or lower health.
+2. Make a base potion with some variables such as HP and Name. A reference to the player will also be stored here.
+3. Finally create a function that can be called from inventory system. This will change the players health. Also check if player is still alive after consuming potion
+
+-- Equipment --
+1. Although majority of this will be handled with the UI, the footwork will be established here.
+2. All equipment is based on the script Equipment.cs
+3. There will be a node attached to the player called Equipment which will have a script called EquipmentManager.cs
+4. In the equipment.cs script it will basically just be a holder for variables, which would be Name, ATK, DEF, and HP
+5. In the EquipmentManager.cs script will hold the funtions for adding and removing equipment and variables for which piece of equipment is equipped where.
+6. There will only be an equippable sword and armor, nothing else.
+
+-- Leveling Up --
+
+-- UI / Inventory System --
+
+-- Console --
+
+-- Map Generation - Part Two --
+
+-- Fog Of War --
+
+-- Saving and Loading --
+
+-- Game Over and Main Menu -- 
+
+-- Finalization and Distrubtion --
 

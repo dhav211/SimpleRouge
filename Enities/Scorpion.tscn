@@ -3,7 +3,7 @@
 [ext_resource path="res://Enities/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Square.tscn" type="PackedScene" id=2]
 
-[node name="Scorpion" index="0" instance=ExtResource( 1 )]
+[node name="Scorpion" instance=ExtResource( 1 )]
 squareScene = ExtResource( 2 )
 
 [node name="Sprite" parent="." index="0"]

@@ -24,13 +24,21 @@ public class PlayerInput : Node2D
         {
             if (@event is InputEventMouseButton mouseInput)
             {
-                HandleInput(mouseInput);
+                HandleMouseInput(mouseInput);
+            }
+            if (@event is InputEventKey keyboardInput)
+            {
+                HandleKeyboardInput(keyboardInput);
             }
         }
     }
 
-    private void HandleInput(InputEventMouseButton _mouseInput)
+    private void HandleMouseInput(InputEventMouseButton _mouseInput)
     {
+        // Handles state of the mouse click. Move to position is based upon direction of the MoveCursor script, so this might seem a bit strange.
+        // A more effective way wouldn't probably just get the mouse position vector here, do the math and determine the direction from that, but the movement
+            // cursor script was already there doing that work, so why not.
+
         Vector2 positionToMove = player.GridPosition + movementCursor.MoveToPosition;
 
         if (_mouseInput.IsActionPressed("ui_left_click"))
@@ -45,7 +53,6 @@ public class PlayerInput : Node2D
                 {
                     InteractWithTileOccupant(positionToMove);
                     turnManager.EmitSignal("turn_completed");
-                    // TODO this will later battle enemies, open chests, and pick up keys
                 }
             }
             else if (!IsPositionWalkable(positionToMove) || movementCursor.MoveToPosition == new Vector2(0,0))  // In valid turn, skip turn
@@ -53,6 +60,71 @@ public class PlayerInput : Node2D
                 turnManager.EmitSignal("turn_completed");
             }
         }
+    }
+
+    private void HandleKeyboardInput(InputEventKey _keyboardInput)
+    {
+        // More or less that exact same as mouse movement, but with keyboard and doesn't rely on movement cursor.
+
+        Vector2 positionToMove = GetKeyboardMoveToPosition(_keyboardInput);
+        if (IsPositionWalkable(positionToMove))
+        {
+            if (!IsPositionOccupied(positionToMove))
+            {
+                MovePlayer(positionToMove);
+            }
+            else  // Position is occupied
+            {
+                InteractWithTileOccupant(positionToMove);
+                turnManager.EmitSignal("turn_completed");
+            }
+        }
+    }
+
+    private Vector2 GetKeyboardMoveToPosition(InputEventKey _keyboardInput)
+    {
+        // Returns a vector2 position which the player will move based upon directions pressed on keyboard.
+        // The keyboard input will return a simple direction which will be added to the players current grid position
+
+        Vector2 moveToPosition = new Vector2();
+
+        // Cardnial Directions
+        if (_keyboardInput.IsActionPressed("ui_up"))
+        {
+            moveToPosition = player.GridPosition + new Vector2(0, -1);
+        }
+        if (_keyboardInput.IsActionPressed("ui_down"))
+        {
+            moveToPosition = player.GridPosition + new Vector2(0, 1);
+        }
+        if (_keyboardInput.IsActionPressed("ui_right"))
+        {
+            moveToPosition = player.GridPosition + new Vector2(1, 0);
+        }
+        if (_keyboardInput.IsActionPressed("ui_left"))
+        {
+            moveToPosition = player.GridPosition + new Vector2(-1, 0);
+        }
+
+        // Diagnial Directions
+        if (_keyboardInput.IsActionPressed("ui_up") && _keyboardInput.IsActionPressed("ui_right"))
+        {
+            moveToPosition = player.GridPosition + new Vector2(1, -1);
+        }
+        if (_keyboardInput.IsActionPressed("ui_up") && _keyboardInput.IsActionPressed("ui_left"))
+        {
+            moveToPosition = player.GridPosition + new Vector2(-1, -1);
+        }
+        if (_keyboardInput.IsActionPressed("ui_down") && _keyboardInput.IsActionPressed("ui_right"))
+        {
+            moveToPosition = player.GridPosition + new Vector2(1, 1);
+        }
+        if (_keyboardInput.IsActionPressed("ui_left") && _keyboardInput.IsActionPressed("ui_right"))
+        {
+            moveToPosition = player.GridPosition + new Vector2(-1, 1);
+        }
+
+        return moveToPosition;
     }
 
     private void MovePlayer(Vector2 _moveToPosition)

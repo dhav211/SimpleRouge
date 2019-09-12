@@ -50,4 +50,13 @@ public class Player : Node2D
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = true; // sets isOccupied on old grid position on tileGrid to true
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = this;
     }
+
+    public void CheckIfAlive()
+    {
+        if (stats.CurrentHealth <= 0)
+        {
+            // TODO run the gameover script from here
+            GD.Print("THE PLAYER IS DEEEEAAAD!!");
+        }
+    }
 }
