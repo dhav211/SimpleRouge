@@ -141,7 +141,17 @@ public class PlayerInput : Node2D
         {
             Enemy occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Enemy;
             attack.AttackTarget(player, occupant);
-        } 
+        }
+        else if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Door)
+        {
+            Door occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Door;
+            occupant.OpenDoor(player);
+        }
+        else if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Chest)
+        {
+            Chest occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Chest;
+            occupant.OpenChest(player);
+        }
         // TODO add interaction with doors, chests, items, etc here
     }
 

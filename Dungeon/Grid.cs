@@ -1,10 +1,10 @@
 using Godot;
 using System;
 
-public class Grid : Node2D
+public class Grid : TileMap
 {
-    static int gridHeight = 100;
-    static int gridWidth = 100;
+    static int gridHeight = 200;
+    static int gridWidth = 200;
 
     Tile[,] tileGrid = new Tile[gridHeight, gridWidth];
 
@@ -42,17 +42,25 @@ public class Grid : Node2D
         
     }
 
-    public void AddTilesAsChildren()
-    // Tiles added to tileGrid from dungeon generator will be added as children of the grid
+    public void SetTileMap()
     {
-        foreach (Tile tile in tileGrid)
+        for (int x = 0; x < gridWidth; ++x)
         {
-            AddChild(tile);
+            for (int y = 0; y < gridHeight; ++y)
+            {
+                if (tileGrid[x,y].SelectedTypeOfTile == Tile.TypeOfTile.Floor)
+                {
+                    SetCell(x, y, 0);
+                }
+                else if (tileGrid[x,y].SelectedTypeOfTile == Tile.TypeOfTile.Empty)
+                {
+                    SetCell(x, y, 0);
+                }
+                else if (tileGrid[x,y].SelectedTypeOfTile == Tile.TypeOfTile.Wall)
+                {
+                    SetCell(x, y, 1);
+                }
+            }
         }
-    }
-
-    private void RemoveTilesAsChildren()
-    {
-        // TOOD, go thru all children and quene free them
     }
 }

@@ -3,10 +3,15 @@ using System;
 
 public class Game : Node2D
 {
+    Player player;
     Grid grid;
     TurnManager turnManager;
     Random random = new Random();
+
     [Export] PackedScene scorpionScene;
+    [Export] PackedScene doorScene;
+    [Export] PackedScene chestScene;
+    [Export] PackedScene silverKeyScene;
 
     public Random Random
     {
@@ -17,17 +22,25 @@ public class Game : Node2D
     {
         grid = GetNode("Grid") as Grid;
         turnManager = GetNode("/root/TurnManager") as TurnManager;
-        SetUpGame();
+        //SetUpGame();
     }
 
     public void SetUpGame()  // Temp method!
     {
+        GD.Print(grid.TileGrid.Length);
         SetUpGrid();
         
-        for (int i = 0; i < 2; ++i)
+        //AddEnemies(2);
+        //AddDoorsAndChests();
+
+        foreach (Tile tile in grid.TileGrid)
         {
-            Enemy scorpion = scorpionScene.Instance() as Enemy;
-            AddChild(scorpion);
+            if (tile.SelectedTypeOfTile == Tile.TypeOfTile.Floor)
+            {
+                Player player = GetNode("Player") as Player;
+                player.Position = new Vector2(tile.GridPosition.x * 16, tile.GridPosition.y * 16);
+                break;
+            }
         }
 
         turnManager.RunTurns();
@@ -37,6 +50,28 @@ public class Game : Node2D
     {
         grid.DungeonGenerator.InitializeDugeonGenerator(grid);
         grid.DungeonGenerator.GenerateDungeon();
-        grid.AddTilesAsChildren();
+        grid.SetTileMap();
+        //grid.AddTilesAsChildren();
+    }
+
+    private void AddEnemies(int _amount)
+    {
+        for (int i = 0; i < _amount; ++i)
+        {
+            Enemy scorpion = scorpionScene.Instance() as Enemy;
+            AddChild(scorpion);
+        }
+    }
+
+    private void AddDoorsAndChests()
+    {
+        Item silverKey = silverKeyScene.Instance() as Item;
+        Door door = doorScene.Instance() as Door;
+        door.InitializeDoor(grid, Door.LockState.Locked);
+        door.KeyRequired = silverKey as Key;
+        AddChild(door);
+        Chest chest = chestScene.Instance() as Chest;
+        chest.InitializeChest(grid, silverKey);
+        AddChild(chest);
     }
 }

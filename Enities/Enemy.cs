@@ -171,7 +171,7 @@ public class Enemy : Node2D
             
             if (!tileToChoose.IsOccupied && tileToChoose.SelectedTypeOfTile == Tile.TypeOfTile.Floor)
             {
-                Position = tileToChoose.Position;
+                Position = new Vector2(tileToChoose.GridPosition.x * 16, tileToChoose.GridPosition.y * 16);
                 isChoosingSurroundingTile = false;
             }
             attempts++;
