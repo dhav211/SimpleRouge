@@ -7,17 +7,26 @@ public class DungeonGenerator
     Grid grid;
     Random random;
 
-    public void InitializeDugeonGenerator(Grid _grid)
+    PackedScene doorScene;
+    PackedScene chestScene;
+    PackedScene silverKeyScene;
+
+    public DungeonGenerator(Grid _grid)
     {
-        // Posibly a dummy method at this point, remove if better solution is reached.
         grid = _grid;
         random = grid.Random;
+        doorScene = ResourceLoader.Load("res://Dungeon/Door.tscn") as PackedScene;
+        chestScene = ResourceLoader.Load("res://Dungeon/Chest.tscn") as PackedScene;
+        silverKeyScene = ResourceLoader.Load("res://Enities/Items/Keys/SilverKey.tscn") as PackedScene;
     }
+
+
+    // Remove chances of making a double exit
 
     public void GenerateDungeon()
     {
         List<Room> rooms = new List<Room>();
-        int roomsToCreate = 8;
+        int roomsToCreate = 20;
         int roomsCreated = 0;
         // Dictionary has 2 vector2s, first is position of exit, and second is direction from the exit the room will be created
         Dictionary<Vector2,Vector2> exitsToConnect = new Dictionary<Vector2, Vector2>();
@@ -35,7 +44,156 @@ public class DungeonGenerator
         }
 
         SetWalls();
+        SetDoors(rooms);
         //CreatePillars();
+    }
+
+    // Every exit will have a door.
+    // When an exit is created have it roll for a chance to create a locked door
+    // When a locked door is created, you will need to spawn a chest with a key in it.
+    // To spawn a chest, you need to get the room number for where the door is spawned, then spawn a chest in a lower room number
+
+    private void SetDoors(List<Room> _rooms)
+    {
+        // Search thru each exit position in each room and create a door there.
+        List<int> roomsWithChest = new List<int>();
+        foreach(Room room in _rooms)
+        {
+            foreach(Vector2 exitPosition in room.exits)
+            {
+                if (CanDoorBeBuiltHere(exitPosition))
+                {
+                    Door door = doorScene.Instance() as Door;
+                    Vector2 doorPosition = new Vector2(exitPosition.x * 16 + 8, exitPosition.y * 16 + 8);
+                    
+                    int lockChance = random.Next(0,11);
+                    Door.LockState lockState;
+                    if (lockChance > 7 && room.roomNumber != 0)
+                    {
+                        lockState = Door.LockState.Locked;
+                        SetChestWithKey(room.roomNumber, _rooms, door, roomsWithChest);
+                    }
+                    else
+                    {
+                        lockState = Door.LockState.Unlocked;
+                    }
+
+                    door.InitializeDoor(grid, lockState, doorPosition);
+                    grid.Doors.Add(door);
+                }
+            }
+        }
+    }
+
+    private void SetChestWithKey(int _roomNumber, List<Room> _rooms, Door _door, List<int> _roomsWithChest)
+    {
+        // Place a chest with a silver key in it in a random room with a room number lower than the number given.
+        // TODO make sure chest cannot ever block a hall
+        Item silverKey = silverKeyScene.Instance() as Item;
+        _door.KeyRequired = silverKey as Key;
+        int instanceRoom = 0;
+        
+        do  // This will assure that only one chest with a key is in each room
+        {
+        instanceRoom = random.Next(0, _roomNumber);
+        if (DoesRoomHaveChest(instanceRoom, _roomsWithChest))
+            instanceRoom++;
+        }
+        while (DoesRoomHaveChest(instanceRoom, _roomsWithChest));
+
+        Vector2 chestPosition = new Vector2();
+        Vector2[] surroundingTiles = new Vector2[4];
+
+        do  // This do while loop makes sure that the chest isn't blocking a hallway
+        {
+        int randomPositionChoice = random.Next(0, _rooms[instanceRoom].tilesInRoom.Count);
+
+        Vector2 chestGridPosition = _rooms[instanceRoom].tilesInRoom[randomPositionChoice];
+        chestPosition = new Vector2(chestGridPosition.x * 16 + 8, chestGridPosition.y * 16 + 8);
+        surroundingTiles = GetSurroundingPositions4Way(chestGridPosition);
+        }
+        while(IsChestBlockingHallway(surroundingTiles));
+
+        Chest chest = chestScene.Instance() as Chest;
+        chest.InitializeChest(grid, silverKey, chestPosition);
+        grid.Chests.Add(chest);
+    }
+
+    private bool DoesRoomHaveChest(int _roomNumber, List<int> _roomsWithChest)
+    {
+        foreach (int roomNumber in _roomsWithChest)
+        {
+            if(roomNumber == _roomNumber)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsChestBlockingHallway(Vector2[] _surroundingTiles)
+    {
+        foreach(Vector2 position in _surroundingTiles)
+        {
+            if (grid.TileGrid[(int)position.x, (int)position.y].IsHall)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Vector2[] GetSurroundingPositions4Way(Vector2 _doorPosition)
+    {
+        Vector2[] surroundingTiles = new Vector2[4];
+
+        surroundingTiles[0] = _doorPosition - new Vector2(0, -1);
+        surroundingTiles[1] = _doorPosition - new Vector2(1, 0);
+        surroundingTiles[2] = _doorPosition - new Vector2(0, 1);
+        surroundingTiles[3] = _doorPosition - new Vector2(-1, 0);
+
+        return surroundingTiles;
+    }
+
+    private bool CanDoorBeBuiltHere(Vector2 _position)
+    {
+        // Checks to see if any doors have been put in odd spots. Since a door can only be the enterance of a room, this will check if those conditions are met
+        Vector2[] surroundingTiles = GetSurroundingPositions4Way(_position);
+        int floorTiles = 0;
+        int hallwayTiles = 0;
+        int emptyTiles = 0;
+
+        for (int i = 0; i < surroundingTiles.Length; ++i)
+        {
+            if (IsTileInGridBounds(surroundingTiles[i]))
+            {
+                if (grid.TileGrid[(int)surroundingTiles[i].x, (int)surroundingTiles[i].y].SelectedTypeOfTile == Tile.TypeOfTile.Floor &&
+                    !grid.TileGrid[(int)surroundingTiles[i].x, (int)surroundingTiles[i].y].IsHall)
+                {
+                    floorTiles += 1;
+                }
+                if (grid.TileGrid[(int)surroundingTiles[i].x, (int)surroundingTiles[i].y].SelectedTypeOfTile == Tile.TypeOfTile.Floor &&
+                    grid.TileGrid[(int)surroundingTiles[i].x, (int)surroundingTiles[i].y].IsHall)
+                {
+                    hallwayTiles += 1;
+                }
+                if (grid.TileGrid[(int)surroundingTiles[i].x, (int)surroundingTiles[i].y].SelectedTypeOfTile == Tile.TypeOfTile.Empty)
+                {
+                    emptyTiles += 1;
+                }
+            }
+        }
+
+        if (floorTiles > 1 || hallwayTiles > 1 || emptyTiles > 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     private void CreatePillars() // TEMP METHOD
@@ -78,10 +236,11 @@ public class DungeonGenerator
 
         Vector2 startingPosition = new Vector2();
         Vector2 topLeftCorner = new Vector2();
-        List<Vector2> directionsChosen = new List<Vector2>();
         bool isPositionFound = false;
         int roomWidth = GetRandomEvenNumber();
         int roomHeight = GetRandomEvenNumber();
+        int roomWidthRadius = roomWidth / 2;
+        int roomHeightRadius = roomHeight / 2;
 
         while (!isPositionFound)
         {
@@ -94,11 +253,10 @@ public class DungeonGenerator
 
         Room room = new Room(_roomsCreated, startingPosition);
         _rooms.Add(room);
-        //topLeftCorner = new Vector2(startingPosition.x - (roomWidth / 2), startingPosition.y - (roomHeight / 2));
         FillRoom(topLeftCorner, roomWidth, roomHeight, _roomsCreated, room);
 
         while (_exitsToConnect.Count == 0)
-            CreateExits(directionsChosen, startingPosition, _exitsToConnect, _roomsCreated);
+            CreateExits(startingPosition, _exitsToConnect, _roomsCreated, room);
     }
 
     private void CreateRoom(Vector2 _exitPosition, Vector2 _directionToHead, int _roomsCreated, int _roomsToCreate, Dictionary<Vector2,Vector2> _exitsToConnect, List<Room> _rooms)
@@ -146,6 +304,10 @@ public class DungeonGenerator
                         {
                             CreateConnectingHallwayToOverlappingRoom(_exitPosition, overlappingTiles, _roomsCreated);
                         }
+                        else
+                        {
+                            RemoveHallway(_exitPosition, _directionToHead);
+                        }
                         isCreatingRoom = false;
                     }
                     else
@@ -155,7 +317,7 @@ public class DungeonGenerator
                         roomHeight -= 2;
                     }
                 }
-                else
+                else  // Room is in grid bounds and won't overlap, so build the room
                 {
                     Room room = new Room(_roomsCreated, startingPosition);
                     _rooms.Add(room);
@@ -164,7 +326,7 @@ public class DungeonGenerator
 
                     if (_roomsCreated <= _roomsToCreate)
                     {
-                        CreateExits(directionsChosen, startingPosition, _exitsToConnect, _roomsCreated);
+                        CreateExits(startingPosition, _exitsToConnect, _roomsCreated, room);
                     }
                     _roomsCreated++;
                     isCreatingRoom = false;
@@ -193,6 +355,7 @@ public class DungeonGenerator
         // set the next current tile but adding the position with the direction to head vector
         // repeat loop until current tile isn't a hall
 
+        Vector2 exitPosition = _position;
         Tile currentTile = grid.TileGrid[(int)_position.x, (int)_position.y];
 
         while (currentTile.IsHall)
@@ -207,8 +370,9 @@ public class DungeonGenerator
         }
     }
 
-    private void CreateExits(List<Vector2> _directionsChosen, Vector2 _startingPosition, Dictionary<Vector2,Vector2> _exitsToConnect, int _roomNumber)
+    private void CreateExits(Vector2 _startingPosition, Dictionary<Vector2,Vector2> _exitsToConnect, int _roomNumber, Room _room)
     {
+        List<Vector2> directionsChosen = new List<Vector2>();
         int numberOfExits = random.Next(1,5);
         int hallwayLength = 4;
 
@@ -221,9 +385,9 @@ public class DungeonGenerator
                 // TODO there needs to be a check to make sure it's not making an exit to a room it's already connected to
                 directionToHead = GetDirectionToHead(random.Next(0,4));  // Assigns which side of room exit will be on
 
-                if (HasDirectionForExitBeenChosen(_directionsChosen, directionToHead))
+                if (HasDirectionForExitBeenChosen(directionsChosen, directionToHead))
                     continue;  // if this side of the room has been chosen already, then try again.
-                _directionsChosen.Add(directionToHead);
+                directionsChosen.Add(directionToHead);
                 isDirectionChosen = true;
             }
             // find the nearest empty tile in that direction
@@ -233,11 +397,9 @@ public class DungeonGenerator
             int distanceToCheck = 1;
             int XDistance = 0;
             int YDistance = 0;
-
+            
             while (!isExitFound)
             {
-                // TODO lets not use starting position, choose a random spot in the room and work with that.
-
                 // Get the tile to check by multiplying the current distance with the direction vector, this will give a positve or negative number or 0
                 XDistance = (int)_startingPosition.x - (distanceToCheck * (int)directionToHead.x);
                 YDistance = (int)_startingPosition.y - (distanceToCheck * (int)directionToHead.y);
@@ -274,7 +436,10 @@ public class DungeonGenerator
                                 SetTileAsFloor((int)hallwayPositions[j].x, (int)hallwayPositions[j].y, _roomNumber);
 
                                 if (j == 0) // the first tile of each hall will be considered the exit, doors will be placed here
+                                {
                                     grid.TileGrid[(int)hallwayPositions[j].x, (int)hallwayPositions[j].y].IsExit = true;
+                                    _room.exits.Add(new Vector2(hallwayPositions[j].x, hallwayPositions[j].y));
+                                }
                                 grid.TileGrid[(int)hallwayPositions[j].x, (int)hallwayPositions[j].y].IsHall = true;
                             }
                         }
@@ -323,7 +488,7 @@ public class DungeonGenerator
     {
         // Checks every surround tile around tile to see if it's empty, if it is, then it should be a wall.
 
-        Vector2[] surroundingTiles = GetSurroundingTilesPosition(_gridPosition);
+        Vector2[] surroundingTiles = GetSurroundingTilesPosition8Way(_gridPosition);
         for (int i = 0; i < surroundingTiles.Length; ++i)
         {
             if (IsTileInGridBounds(new Vector2(surroundingTiles[i].x, surroundingTiles[i].y)) && 
@@ -348,7 +513,7 @@ public class DungeonGenerator
         int YDistanceToTravel = (int)closestOverlappingPosition.y - (int)_exitPosition.y;
         Vector2 currentPosition = _exitPosition;
 
-        for (int x = 0; x < Math.Abs(XDistanceToTravel + 2); ++x)  // Create hallway horizontally
+        for (int x = 0; x < Math.Abs(XDistanceToTravel + 3); ++x)  // Create hallway horizontally
         {
             if (XDistanceToTravel > 0)
             {
@@ -358,10 +523,11 @@ public class DungeonGenerator
             {
                 currentPosition = new Vector2(currentPosition.x - 1, currentPosition.y);
             }
-            SetTileAsFloor((int)currentPosition.x, (int)currentPosition.y, _roomNumber);
+            if (grid.TileGrid[(int)currentPosition.x, (int)currentPosition.y].SelectedTypeOfTile == Tile.TypeOfTile.Floor)
+                SetTileAsFloor((int)currentPosition.x, (int)currentPosition.y, _roomNumber);
         }
 
-        for (int y = 0; y < Math.Abs(YDistanceToTravel + 2); ++y)  // Create hallway vertically
+        for (int y = 0; y < Math.Abs(YDistanceToTravel + 3); ++y)  // Create hallway vertically
         {
             if (YDistanceToTravel > 0)
             {
@@ -371,7 +537,8 @@ public class DungeonGenerator
             {
                 currentPosition = new Vector2(currentPosition.x, currentPosition.y - 1);
             }
-            SetTileAsFloor((int)currentPosition.x, (int)currentPosition.y, _roomNumber);
+            if (grid.TileGrid[(int)currentPosition.x, (int)currentPosition.y].SelectedTypeOfTile == Tile.TypeOfTile.Floor)
+                SetTileAsFloor((int)currentPosition.x, (int)currentPosition.y, _roomNumber);
         }
     }
 
@@ -474,7 +641,7 @@ public class DungeonGenerator
         return new Vector2(0,0); // Error, can't be reached ever.
     }
 
-    private Vector2[] GetSurroundingTilesPosition(Vector2 _gridPosition)
+    private Vector2[] GetSurroundingTilesPosition8Way(Vector2 _gridPosition)
     {   
         // Fills and returns an array with the positions of all 8 surrounding tiles
         Vector2 [] surroundingTiles = new Vector2[8];
@@ -592,7 +759,7 @@ class Room
         roomCenter = _roomCenter;
     }
 
-    int roomNumber;
+    public int roomNumber;
     Vector2 roomCenter = new Vector2();
     public List<Vector2> exits = new List<Vector2>();
     public List<Vector2> tilesInRoom = new List<Vector2>();

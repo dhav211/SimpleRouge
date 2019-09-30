@@ -66,8 +66,20 @@ public class TurnManager : Node
                         continue;
 
                     enemy.RunAI();
-                    enemy = null;
+
+                    // Set the timer to be near instant if enemy is off screen, but on screen the timer will be of normal length
+                    Vector2 distance = enemy.Position - player.Position;
+                    if (distance.x > 500 || distance.y > 500)
+                    {
+                        timer.WaitTime = 0.01f;
+                    }
+                    else
+                    {
+                        timer.WaitTime = 0.1f;
+                    }
+
                     timer.Start();
+                    enemy = null;
                     await ToSignal(timer, "timeout");
                 }
             }

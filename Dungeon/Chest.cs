@@ -6,6 +6,7 @@ public class Chest : Node2D
     enum OpenState { Opened, Closed }
     OpenState currentOpenState = OpenState.Closed;
     Vector2 gridPosition;
+    Vector2 positionToSet;
     Rect2 closedRegion = new Rect2(170, 102, 16, 16);
     Rect2 openRegion = new Rect2(187, 102, 16, 16);
     Item itemInside;
@@ -17,14 +18,15 @@ public class Chest : Node2D
     {
         sprite = GetNode("Sprite") as Sprite;
         SetSprite();
+        Position = positionToSet;
     }
 
-    public void InitializeChest(Grid _grid, Item _itemInside)
+    public void InitializeChest(Grid _grid, Item _itemInside, Vector2 _position)
     {
         grid = _grid;
 
-        Position = new Vector2(64, 64);
-        gridPosition = new Vector2(Mathf.FloorToInt(Position.x /16), Mathf.FloorToInt(Position.y /16));
+        positionToSet = _position;
+        gridPosition = new Vector2(Mathf.FloorToInt(positionToSet.x /16), Mathf.FloorToInt(positionToSet.y /16));
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = true;
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = this;
         itemInside = _itemInside;

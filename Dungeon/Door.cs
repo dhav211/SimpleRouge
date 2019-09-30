@@ -6,6 +6,7 @@ public class Door : Node2D
     public enum LockState { Unlocked, Locked }
     LockState currentLockState = LockState.Unlocked;
     public Vector2 gridPosition = new Vector2();
+    Vector2 positionToSet;
     public Key KeyRequired {get; set;}
 
     Sprite sprite;
@@ -14,21 +15,16 @@ public class Door : Node2D
     public override void _Ready()
     {
         sprite = GetNode("Sprite") as Sprite;
-        //grid = GetTree().GetRoot().GetNode("Game/Grid") as Grid;  // TODO add this back in later as time of dungeon generation
-
-        /*
-        gridPosition = new Vector2(Mathf.FloorToInt(Position.x /16), Mathf.FloorToInt(Position.y /16));
-        grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = true;
-        grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = this;
-        */
+        Position = positionToSet;
     }
 
-    public void InitializeDoor(Grid _grid, LockState _lockState)  // TEMP METHOD!!
+    public void InitializeDoor(Grid _grid, LockState _lockState, Vector2 _position)
     {
         grid = _grid;
 
-        Position = new Vector2(32, 32);
-        gridPosition = new Vector2(Mathf.FloorToInt(Position.x /16), Mathf.FloorToInt(Position.y /16));
+        //Position = new Vector2(_gridPosition.x * 16 + 8, _gridPosition.y * 16 + 8);
+        positionToSet = _position;
+        gridPosition = new Vector2(Mathf.FloorToInt(positionToSet.x /16), Mathf.FloorToInt(positionToSet.y /16));
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = true;
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = this;
 

@@ -35,7 +35,7 @@ public class Game : Node2D
 
         foreach (Tile tile in grid.TileGrid)
         {
-            if (tile.SelectedTypeOfTile == Tile.TypeOfTile.Floor)
+            if (tile.SelectedTypeOfTile == Tile.TypeOfTile.Floor && tile.RoomNumber == 0)
             {
                 Player player = GetNode("Player") as Player;
                 player.Position = new Vector2(tile.GridPosition.x * 16, tile.GridPosition.y * 16);
@@ -48,9 +48,11 @@ public class Game : Node2D
 
     private void SetUpGrid()
     {
-        grid.DungeonGenerator.InitializeDugeonGenerator(grid);
         grid.DungeonGenerator.GenerateDungeon();
         grid.SetTileMap();
+        grid.SetDoors();
+        grid.SetChests();
+        AddEnemies(10);
         //grid.AddTilesAsChildren();
     }
 
@@ -67,11 +69,11 @@ public class Game : Node2D
     {
         Item silverKey = silverKeyScene.Instance() as Item;
         Door door = doorScene.Instance() as Door;
-        door.InitializeDoor(grid, Door.LockState.Locked);
+        //door.InitializeDoor(grid, Door.LockState.Locked);
         door.KeyRequired = silverKey as Key;
         AddChild(door);
         Chest chest = chestScene.Instance() as Chest;
-        chest.InitializeChest(grid, silverKey);
+        //chest.InitializeChest(grid, silverKey);
         AddChild(chest);
     }
 }

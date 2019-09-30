@@ -89,7 +89,7 @@ public class PlayerInput : Node2D
         Vector2 moveToPosition = new Vector2();
 
         // Cardnial Directions
-        if (_keyboardInput.IsActionPressed("ui_up"))
+        if (_keyboardInput.IsAction("ui_up"))
         {
             moveToPosition = player.GridPosition + new Vector2(0, -1);
         }

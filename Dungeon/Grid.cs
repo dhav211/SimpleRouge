@@ -1,14 +1,17 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class Grid : TileMap
 {
-    static int gridHeight = 200;
-    static int gridWidth = 200;
+    static int gridHeight = 400;
+    static int gridWidth = 400;
 
     Tile[,] tileGrid = new Tile[gridHeight, gridWidth];
+    List<Door> doors = new List<Door>();
+    List<Chest> chests = new List<Chest>();
 
-    DungeonGenerator dungeonGenerator = new DungeonGenerator();
+    DungeonGenerator dungeonGenerator;
     Random random = new Random();
 
     public Random Random
@@ -22,10 +25,23 @@ public class Grid : TileMap
         set { tileGrid = value; }
     }
 
+    public List<Door> Doors
+    {
+        get { return doors; }
+        set { doors = value; }
+    }
+
+    public List<Chest> Chests
+    {
+        get { return chests; }
+        set { chests = value; }
+    }
+
     public DungeonGenerator DungeonGenerator
     {
         get { return dungeonGenerator; }
     }
+
 
     public int GridHeight
     {
@@ -39,7 +55,7 @@ public class Grid : TileMap
 
     public override void _Ready()
     {
-        
+        dungeonGenerator = new DungeonGenerator(this);
     }
 
     public void SetTileMap()
@@ -61,6 +77,22 @@ public class Grid : TileMap
                     SetCell(x, y, 1);
                 }
             }
+        }
+    }
+    
+    public void SetDoors()
+    {
+        foreach (Door door in doors)
+        {
+            AddChild(door);
+        }
+    }
+
+    public void SetChests()
+    {
+        foreach (Chest chest in chests)
+        {
+            AddChild(chest);
         }
     }
 }
