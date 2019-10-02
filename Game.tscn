@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Game.cs" type="Script" id=1]
 [ext_resource path="res://Enities/Scorpion.tscn" type="PackedScene" id=2]
@@ -9,7 +9,10 @@
 [ext_resource path="res://tilesheet.png" type="Texture" id=7]
 [ext_resource path="res://Dungeon/Grid.cs" type="Script" id=8]
 [ext_resource path="res://Scripts/TurnTimer.cs" type="Script" id=9]
-[ext_resource path="res://GenerateDungeon.cs" type="Script" id=10]
+[ext_resource path="res://GUI/window6_130.png" type="Texture" id=10]
+[ext_resource path="res://GUI/font.tres" type="DynamicFont" id=11]
+[ext_resource path="res://GUI/Console.cs" type="Script" id=12]
+[ext_resource path="res://GUI/Message.tscn" type="PackedScene" id=13]
 
 [sub_resource type="TileSet" id=1]
 0/name = "empty"
@@ -41,7 +44,7 @@ chestScene = ExtResource( 4 )
 silverKeyScene = ExtResource( 5 )
 
 [node name="Player" parent="." instance=ExtResource( 6 )]
-position = Vector2( 16, 16 )
+position = Vector2( 239, 131 )
 
 [node name="Grid" type="TileMap" parent="."]
 position = Vector2( -8, -8 )
@@ -59,12 +62,180 @@ script = ExtResource( 9 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="GenerateDungeon" type="Button" parent="CanvasLayer"]
-margin_left = 271.653
-margin_top = 174.183
-margin_right = 403.653
-margin_bottom = 194.183
-text = "Generate Dungeon"
-script = ExtResource( 10 )
+[node name="GUI" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="SideMenu" type="NinePatchRect" parent="CanvasLayer/GUI"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -115.0
+margin_top = -1.0
+margin_right = 1.0
+margin_bottom = 1.0
+texture = ExtResource( 10 )
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="PlayerInfo" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
+editor/display_folded = true
+margin_right = 116.0
+margin_bottom = 104.0
+texture = ExtResource( 10 )
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="PlayerName" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 110.0
+margin_bottom = 22.0
+custom_fonts/font = ExtResource( 11 )
+text = "PlayerName"
+
+[node name="LVLContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
+margin_left = 10.0
+margin_top = 27.0
+margin_right = 94.0
+margin_bottom = 43.0
+custom_constants/separation = 6
+
+[node name="LVL" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/LVLContainer"]
+margin_right = 35.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "LVL:"
+
+[node name="CurrentLVL" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/LVLContainer"]
+margin_left = 41.0
+margin_right = 60.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "69"
+
+[node name="HPContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
+margin_left = 10.0
+margin_top = 45.0
+margin_right = 94.0
+margin_bottom = 61.0
+
+[node name="HP" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/HPContainer"]
+margin_right = 26.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "HP:"
+
+[node name="CurrentHP" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/HPContainer"]
+margin_left = 30.0
+margin_right = 49.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "69"
+
+[node name="Seperator" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/HPContainer"]
+margin_left = 53.0
+margin_right = 62.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "/"
+
+[node name="MaxHP" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/HPContainer"]
+margin_left = 66.0
+margin_right = 85.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "69"
+
+[node name="STRContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
+margin_left = 10.0
+margin_top = 63.0
+margin_right = 94.0
+margin_bottom = 79.0
+custom_constants/separation = 6
+
+[node name="STR" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/STRContainer"]
+margin_right = 38.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "STR:"
+
+[node name="CurrentSTR" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/STRContainer"]
+margin_left = 44.0
+margin_right = 63.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "69"
+
+[node name="DEFContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
+margin_left = 10.0
+margin_top = 82.0
+margin_right = 94.0
+margin_bottom = 95.0
+custom_constants/separation = 6
+
+[node name="DEF" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/DEFContainer"]
+margin_right = 36.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "DEF:"
+
+[node name="CurrentDEF" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/DEFContainer"]
+margin_left = 42.0
+margin_right = 61.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "69"
+
+[node name="Equipment" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
+margin_top = 98.0
+margin_right = 116.0
+margin_bottom = 191.0
+texture = ExtResource( 10 )
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="Label" type="Label" parent="CanvasLayer/GUI/SideMenu/Equipment"]
+margin_left = 3.0
+margin_top = 10.0
+margin_right = 113.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 11 )
+text = "Equipment"
+align = 1
+
+[node name="Console" type="NinePatchRect" parent="CanvasLayer/GUI"]
+margin_left = -1.0
+margin_top = 256.0
+margin_right = 527.0
+margin_bottom = 361.0
+texture = ExtResource( 10 )
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+script = ExtResource( 12 )
+messageScene = ExtResource( 13 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/GUI/Console"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 13.0
+margin_top = 10.0
+margin_right = -15.0
+margin_bottom = -9.0
+scroll_horizontal_enabled = false
+
+[node name="TextContainer" type="VBoxContainer" parent="CanvasLayer/GUI/Console/ScrollContainer"]
+margin_right = 500.0
+rect_min_size = Vector2( 500, 0 )
 [connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
-[connection signal="pressed" from="CanvasLayer/GenerateDungeon" to="CanvasLayer/GenerateDungeon" method="_on_GenerateDungeon_pressed"]

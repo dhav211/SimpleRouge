@@ -33,3 +33,5 @@ script = ExtResource( 5 )
 script = ExtResource( 6 )
 
 [node name="Camera" parent="." instance=ExtResource( 7 )]
+offset = Vector2( 25, 5 )
+zoom = Vector2( 0.85, 0.75 )

@@ -18,6 +18,7 @@ public class Enemy : Node2D
     Player player;
     Game game;
     Stats stats;
+    Console console;
     Attack attack = new Attack();
 
     public Stats Stats
@@ -36,6 +37,7 @@ public class Enemy : Node2D
         grid = GetTree().GetRoot().GetNode("Game/Grid") as Grid;
         game = GetTree().GetRoot().GetNode("Game") as Game;
         player = GetTree().GetRoot().GetNode("Game/Player") as Player;
+        console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
         stats = GetNode("Stats") as Stats;
         turnManager.Turns.Add(this);
         pathfinding.InitializePathfinding(grid, player);
@@ -69,7 +71,7 @@ public class Enemy : Node2D
         {
             if (IsPlayerNearby())
             {
-                attack.AttackTarget(this, player);
+                attack.AttackTarget(this, player, console);
             }
             else
             {

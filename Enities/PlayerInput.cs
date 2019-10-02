@@ -8,6 +8,7 @@ public class PlayerInput : Node2D
     TurnManager turnManager;
     MovementCursor movementCursor;
     Grid grid;
+    Console console;
     Attack attack = new Attack();
 
     public override void _Ready()
@@ -15,6 +16,7 @@ public class PlayerInput : Node2D
         player = GetParent() as Player;
         turnManager =  GetNode("/root/TurnManager") as TurnManager;
         grid = GetTree().GetRoot().GetNode("Game/Grid") as Grid;
+        console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
         movementCursor = GetParent().GetNode("MovementCursor") as MovementCursor;
     }
 
@@ -89,7 +91,7 @@ public class PlayerInput : Node2D
         Vector2 moveToPosition = new Vector2();
 
         // Cardnial Directions
-        if (_keyboardInput.IsAction("ui_up"))
+        if (_keyboardInput.IsActionPressed("ui_up"))
         {
             moveToPosition = player.GridPosition + new Vector2(0, -1);
         }
@@ -140,7 +142,7 @@ public class PlayerInput : Node2D
         if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Enemy)
         {
             Enemy occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Enemy;
-            attack.AttackTarget(player, occupant);
+            attack.AttackTarget(player, occupant, console);
         }
         else if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Door)
         {

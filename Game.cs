@@ -22,7 +22,7 @@ public class Game : Node2D
     {
         grid = GetNode("Grid") as Grid;
         turnManager = GetNode("/root/TurnManager") as TurnManager;
-        //SetUpGame();
+        SetUpGame();
     }
 
     public void SetUpGame()  // Temp method!
