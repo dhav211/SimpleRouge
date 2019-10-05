@@ -64,3 +64,7 @@ position = Vector2( 0, -16 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Death = SubResource( 1 )
+
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 0.7
+[connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]

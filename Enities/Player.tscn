@@ -35,3 +35,7 @@ script = ExtResource( 6 )
 [node name="Camera" parent="." instance=ExtResource( 7 )]
 offset = Vector2( 25, 5 )
 zoom = Vector2( 0.85, 0.75 )
+
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 0.7
+[connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]

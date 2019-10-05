@@ -11,14 +11,17 @@ public class Door : Node2D
 
     Sprite sprite;
     Grid grid;
+    Console console;
 
     public override void _Ready()
     {
         sprite = GetNode("Sprite") as Sprite;
+        console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
         Position = positionToSet;
+        Key m_key = KeyRequired;
     }
 
-    public void InitializeDoor(Grid _grid, LockState _lockState, Vector2 _position)
+    public void InitializeDoor(Grid _grid, LockState _lockState, Vector2 _position, Key _keyRequired)
     {
         grid = _grid;
 
@@ -27,7 +30,7 @@ public class Door : Node2D
         gridPosition = new Vector2(Mathf.FloorToInt(positionToSet.x /16), Mathf.FloorToInt(positionToSet.y /16));
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = true;
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = this;
-
+        KeyRequired = _keyRequired;
         currentLockState = _lockState;
     }
 
@@ -41,17 +44,20 @@ public class Door : Node2D
         }
         else if (currentLockState == LockState.Locked)
         {
-            GD.Print("Door is locked with " + KeyRequired.ItemName);
             // Search thru players inventory and see if it has required key to open.
             // If player has key, then unlock.
-            // TODO When console functions, print that the required key is needed to open door
 
             if (_player.Inventory.IsItemInIventory(KeyRequired))
             {
                 grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = false;
                 grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = null;
                 _player.Inventory.RemoveItem(KeyRequired);
+                console.PrintMessageToConsole("Door was unlocked with " + KeyRequired.ItemName);
                 QueueFree();
+            }
+            else  // Player doesn't have the key to unlock door
+            {
+                console.PrintMessageToConsole("Door is locked with " + KeyRequired.ItemName);
             }
         }
     }

@@ -65,42 +65,46 @@ public class DungeonGenerator
                 {
                     Door door = doorScene.Instance() as Door;
                     Vector2 doorPosition = new Vector2(exitPosition.x * 16 + 8, exitPosition.y * 16 + 8);
-                    
+                    Key key = null;
+
                     int lockChance = random.Next(0,11);
                     Door.LockState lockState;
-                    if (lockChance > 7 && room.roomNumber != 0)
+                    if (lockChance >= 0 && room.roomNumber != 0)
                     {
+                        key = silverKeyScene.Instance() as Key;
                         lockState = Door.LockState.Locked;
-                        SetChestWithKey(room.roomNumber, _rooms, door, roomsWithChest);
+
+                        int spawnChestChance = random.Next(0,11);
+
+                        if (spawnChestChance > 6)
+                            SetChestWithKey(room.roomNumber, _rooms, door, roomsWithChest, key);
                     }
                     else
                     {
                         lockState = Door.LockState.Unlocked;
                     }
 
-                    door.InitializeDoor(grid, lockState, doorPosition);
+                    door.InitializeDoor(grid, lockState, doorPosition, key);
                     grid.Doors.Add(door);
                 }
             }
         }
     }
 
-    private void SetChestWithKey(int _roomNumber, List<Room> _rooms, Door _door, List<int> _roomsWithChest)
+    private void SetChestWithKey(int _roomNumber, List<Room> _rooms, Door _door, List<int> _roomsWithChest, Key _key)
     {
         // Place a chest with a silver key in it in a random room with a room number lower than the number given.
-        // TODO make sure chest cannot ever block a hall
-        Item silverKey = silverKeyScene.Instance() as Item;
-        _door.KeyRequired = silverKey as Key;
         int instanceRoom = 0;
         
+        int roomChoiceAttemptCounter = 0;
         do  // This will assure that only one chest with a key is in each room
         {
         instanceRoom = random.Next(0, _roomNumber);
-        if (DoesRoomHaveChest(instanceRoom, _roomsWithChest))
-            instanceRoom++;
+        roomChoiceAttemptCounter++;
         }
-        while (DoesRoomHaveChest(instanceRoom, _roomsWithChest));
+        while (DoesRoomHaveChest(instanceRoom, _roomsWithChest) && roomChoiceAttemptCounter <= 20);
 
+        _roomsWithChest.Add(instanceRoom);
         Vector2 chestPosition = new Vector2();
         Vector2[] surroundingTiles = new Vector2[4];
 
@@ -115,7 +119,7 @@ public class DungeonGenerator
         while(IsChestBlockingHallway(surroundingTiles));
 
         Chest chest = chestScene.Instance() as Chest;
-        chest.InitializeChest(grid, silverKey, chestPosition);
+        chest.InitializeChest(grid, _key, chestPosition);
         grid.Chests.Add(chest);
     }
 

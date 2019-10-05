@@ -10,7 +10,6 @@ public class Enemy : Node2D
     Vector2 gridPosition = new Vector2();
     bool isAlive = true;
     [Export] int viewDistance = 8;
-    [Export] PackedScene squareScene;  // TODO delete this
 
     TurnManager turnManager;
     Pathfinding pathfinding = new Pathfinding();
@@ -19,6 +18,7 @@ public class Enemy : Node2D
     Game game;
     Stats stats;
     Console console;
+    Timer attackTimer;
     Attack attack = new Attack();
 
     public Stats Stats
@@ -39,6 +39,7 @@ public class Enemy : Node2D
         player = GetTree().GetRoot().GetNode("Game/Player") as Player;
         console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
         stats = GetNode("Stats") as Stats;
+        attackTimer = GetNode("AttackTimer") as Timer;
         turnManager.Turns.Add(this);
         pathfinding.InitializePathfinding(grid, player);
 
@@ -46,7 +47,7 @@ public class Enemy : Node2D
         gridPosition = new Vector2(Mathf.FloorToInt(Position.x /16), Mathf.FloorToInt(Position.y /16));
     }
 
-    public void RunAI()
+    public async void RunAI()
     {
         if (currentEnemyState == EnemyState.Wandering)
         {
@@ -72,6 +73,7 @@ public class Enemy : Node2D
             if (IsPlayerNearby())
             {
                 attack.AttackTarget(this, player, console);
+                await ToSignal(attackTimer, "timeout");
             }
             else
             {

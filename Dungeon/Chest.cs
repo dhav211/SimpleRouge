@@ -13,10 +13,12 @@ public class Chest : Node2D
 
     Grid grid;
     Sprite sprite;
+    Console console;
 
     public override void _Ready()
     {
         sprite = GetNode("Sprite") as Sprite;
+        console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
         SetSprite();
         Position = positionToSet;
     }
@@ -39,11 +41,11 @@ public class Chest : Node2D
             currentOpenState = OpenState.Opened;
             SetSprite();
             _player.Inventory.AddItem(itemInside);
+            console.PrintMessageToConsole("There was a " + itemInside.Name + " inside the chest. Sweet!");
         }
         else if (currentOpenState == OpenState.Opened)
         {
-            GD.Print("Chest has already been opened.");
-            // TODO print this message to the console
+            console.PrintMessageToConsole("Chest has already been opened.");
         }
     }
 

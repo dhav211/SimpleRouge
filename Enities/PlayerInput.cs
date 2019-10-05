@@ -7,6 +7,7 @@ public class PlayerInput : Node2D
     Player player;
     TurnManager turnManager;
     MovementCursor movementCursor;
+    Timer attackTimer;
     Grid grid;
     Console console;
     Attack attack = new Attack();
@@ -18,6 +19,7 @@ public class PlayerInput : Node2D
         grid = GetTree().GetRoot().GetNode("Game/Grid") as Grid;
         console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
         movementCursor = GetParent().GetNode("MovementCursor") as MovementCursor;
+        attackTimer = GetParent().GetNode("AttackTimer") as Timer;
     }
 
     public override void _Input(InputEvent @event)
@@ -91,19 +93,19 @@ public class PlayerInput : Node2D
         Vector2 moveToPosition = new Vector2();
 
         // Cardnial Directions
-        if (_keyboardInput.IsActionPressed("ui_up"))
+        if (_keyboardInput.IsAction("ui_up"))
         {
             moveToPosition = player.GridPosition + new Vector2(0, -1);
         }
-        if (_keyboardInput.IsActionPressed("ui_down"))
+        if (_keyboardInput.IsAction("ui_down"))
         {
             moveToPosition = player.GridPosition + new Vector2(0, 1);
         }
-        if (_keyboardInput.IsActionPressed("ui_right"))
+        if (_keyboardInput.IsAction("ui_right"))
         {
             moveToPosition = player.GridPosition + new Vector2(1, 0);
         }
-        if (_keyboardInput.IsActionPressed("ui_left"))
+        if (_keyboardInput.IsAction("ui_left"))
         {
             moveToPosition = player.GridPosition + new Vector2(-1, 0);
         }
@@ -137,12 +139,13 @@ public class PlayerInput : Node2D
         turnManager.EmitSignal("turn_completed");
     }
 
-    private void InteractWithTileOccupant(Vector2 _moveToPosition)
+    private async void InteractWithTileOccupant(Vector2 _moveToPosition)
     {
         if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Enemy)
         {
             Enemy occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Enemy;
             attack.AttackTarget(player, occupant, console);
+            await ToSignal(attackTimer, "timeout");
         }
         else if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Door)
         {

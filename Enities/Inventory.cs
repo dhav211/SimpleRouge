@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Inventory : Node2D
 {
     List<Item> items = new List<Item>();
+    Console console;
+    ItemContainer itemContainer;
 
     public List<Item> Items
     {
@@ -14,23 +16,33 @@ public class Inventory : Node2D
 
     public override void _Ready()
     {
-        
+        console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
+        itemContainer = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/SideMenu/Items/ItemContainer") as ItemContainer;
     }
 
     public void AddItem(Item _itemToAdd)
     {
-        GD.Print(_itemToAdd.ItemName + " has been added to inventory"); // TODO print this in game console
         items.Add(_itemToAdd);
+
+        if (_itemToAdd.SelectedTypeOfItem == Item.ItemType.Key || _itemToAdd.SelectedTypeOfItem == Item.ItemType.Potion)
+        {
+            itemContainer.UpdateItemContainer(_itemToAdd);
+        }
+            // Update item container
     }
 
     public void RemoveItem(Item _itemToRemove)
     {
         foreach(Item item in items)
         {
-            if (item == _itemToRemove)
+            if (item.Name == _itemToRemove.Name)
             {
-                items.Remove(_itemToRemove);
-                GD.Print(_itemToRemove.ItemName + " has been removed from inventory"); // TODO print this in game console
+                items.Remove(item);
+                if (_itemToRemove.SelectedTypeOfItem == Item.ItemType.Key || _itemToRemove.SelectedTypeOfItem == Item.ItemType.Potion)
+                {
+                    itemContainer.UpdateItemContainer(_itemToRemove);
+                }
+                    // Update item container
                 break;
             }
         }
@@ -40,9 +52,8 @@ public class Inventory : Node2D
     {
         foreach (Item item in items)
         {
-            if (item == _itemToCheck)
+            if (item.Name == _itemToCheck.Name)
             {
-                GD.Print(_itemToCheck.ItemName + " is in inventory");
                 return true;
             }
         }

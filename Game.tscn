@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Game.cs" type="Script" id=1]
 [ext_resource path="res://Enities/Scorpion.tscn" type="PackedScene" id=2]
@@ -11,8 +11,14 @@
 [ext_resource path="res://Scripts/TurnTimer.cs" type="Script" id=9]
 [ext_resource path="res://GUI/window6_130.png" type="Texture" id=10]
 [ext_resource path="res://GUI/font.tres" type="DynamicFont" id=11]
-[ext_resource path="res://GUI/Console.cs" type="Script" id=12]
-[ext_resource path="res://GUI/Message.tscn" type="PackedScene" id=13]
+[ext_resource path="res://GUI/weapon_icon.png" type="Texture" id=12]
+[ext_resource path="res://GUI/armor_icon.png" type="Texture" id=13]
+[ext_resource path="res://GUI/ItemContainer.cs" type="Script" id=14]
+[ext_resource path="res://GUI/potion_icon.png" type="Texture" id=15]
+[ext_resource path="res://GUI/small_key_icon.png" type="Texture" id=16]
+[ext_resource path="res://GUI/master_key_icon.png" type="Texture" id=17]
+[ext_resource path="res://GUI/Console.cs" type="Script" id=18]
+[ext_resource path="res://GUI/Message.tscn" type="PackedScene" id=19]
 
 [sub_resource type="TileSet" id=1]
 0/name = "empty"
@@ -57,7 +63,7 @@ __meta__ = {
 }
 
 [node name="TurnTimer" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.05
 script = ExtResource( 9 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -86,7 +92,7 @@ patch_margin_bottom = 6
 [node name="PlayerInfo" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
 editor/display_folded = true
 margin_right = 116.0
-margin_bottom = 104.0
+margin_bottom = 109.0
 texture = ExtResource( 10 )
 patch_margin_left = 6
 patch_margin_top = 6
@@ -102,6 +108,7 @@ custom_fonts/font = ExtResource( 11 )
 text = "PlayerName"
 
 [node name="LVLContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
+editor/display_folded = true
 margin_left = 10.0
 margin_top = 27.0
 margin_right = 94.0
@@ -122,6 +129,7 @@ custom_fonts/font = ExtResource( 11 )
 text = "69"
 
 [node name="HPContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
+editor/display_folded = true
 margin_left = 10.0
 margin_top = 45.0
 margin_right = 94.0
@@ -155,6 +163,7 @@ custom_fonts/font = ExtResource( 11 )
 text = "69"
 
 [node name="STRContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
+editor/display_folded = true
 margin_left = 10.0
 margin_top = 63.0
 margin_right = 94.0
@@ -195,9 +204,10 @@ custom_fonts/font = ExtResource( 11 )
 text = "69"
 
 [node name="Equipment" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
-margin_top = 98.0
+editor/display_folded = true
+margin_top = 102.0
 margin_right = 116.0
-margin_bottom = 191.0
+margin_bottom = 171.0
 texture = ExtResource( 10 )
 patch_margin_left = 6
 patch_margin_top = 6
@@ -213,6 +223,136 @@ custom_fonts/font = ExtResource( 11 )
 text = "Equipment"
 align = 1
 
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/Equipment"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 17.0
+margin_top = 30.0
+margin_right = -17.0
+margin_bottom = -29.0
+alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/GUI/SideMenu/Equipment/HBoxContainer"]
+margin_left = 7.0
+margin_right = 39.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture_normal = ExtResource( 12 )
+texture_pressed = ExtResource( 12 )
+texture_hover = ExtResource( 12 )
+expand = true
+
+[node name="TextureButton2" type="TextureButton" parent="CanvasLayer/GUI/SideMenu/Equipment/HBoxContainer"]
+margin_left = 43.0
+margin_right = 75.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+texture_normal = ExtResource( 13 )
+texture_pressed = ExtResource( 13 )
+texture_hover = ExtResource( 13 )
+expand = true
+
+[node name="Items" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
+margin_top = 165.0
+margin_right = 116.0
+margin_bottom = 263.0
+texture = ExtResource( 10 )
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+
+[node name="Label" type="Label" parent="CanvasLayer/GUI/SideMenu/Items"]
+margin_left = 3.0
+margin_top = 10.0
+margin_right = 113.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 11 )
+text = "Items"
+align = 1
+
+[node name="ItemContainer" type="VBoxContainer" parent="CanvasLayer/GUI/SideMenu/Items"]
+margin_left = 26.0
+margin_top = 29.0
+margin_right = 91.0
+margin_bottom = 93.0
+custom_constants/separation = 8
+script = ExtResource( 14 )
+
+[node name="Potions" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer"]
+margin_right = 65.0
+margin_bottom = 16.0
+custom_constants/separation = 5
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/Potions"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 15 )
+
+[node name="Seperator" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/Potions"]
+margin_left = 21.0
+margin_right = 32.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "x"
+
+[node name="Amount" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/Potions"]
+margin_left = 37.0
+margin_right = 46.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "0"
+
+[node name="SimpleKeys" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer"]
+margin_top = 24.0
+margin_right = 65.0
+margin_bottom = 40.0
+custom_constants/separation = 5
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/SimpleKeys"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 16 )
+
+[node name="Seperator" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/SimpleKeys"]
+margin_left = 21.0
+margin_right = 32.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "x"
+
+[node name="Amount" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/SimpleKeys"]
+margin_left = 37.0
+margin_right = 46.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "0"
+
+[node name="MasterKeys" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer"]
+margin_top = 48.0
+margin_right = 65.0
+margin_bottom = 64.0
+custom_constants/separation = 5
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/MasterKeys"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 17 )
+
+[node name="Seperator" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/MasterKeys"]
+margin_left = 21.0
+margin_right = 32.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "x"
+
+[node name="Amount" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/MasterKeys"]
+margin_left = 37.0
+margin_right = 46.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 11 )
+text = "0"
+
 [node name="Console" type="NinePatchRect" parent="CanvasLayer/GUI"]
 margin_left = -1.0
 margin_top = 256.0
@@ -223,8 +363,8 @@ patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
 patch_margin_bottom = 6
-script = ExtResource( 12 )
-messageScene = ExtResource( 13 )
+script = ExtResource( 18 )
+messageScene = ExtResource( 19 )
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/GUI/Console"]
 anchor_right = 1.0
