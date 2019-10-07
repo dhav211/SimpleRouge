@@ -72,7 +72,7 @@ public class Enemy : Node2D
         {
             if (IsPlayerNearby())
             {
-                attack.AttackTarget(this, player, console);
+                attack.AttackTarget(this, player, console, grid.Random);
                 await ToSignal(attackTimer, "timeout");
             }
             else

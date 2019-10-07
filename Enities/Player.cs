@@ -13,6 +13,7 @@ public class Player : Node2D
     PlayerInput playerInput;
     MovementCursor movementCursor;
     Inventory inventory;
+    EquipmentHolder equipment;
 
     public Vector2 GridPosition
     {
@@ -29,6 +30,11 @@ public class Player : Node2D
         get { return inventory; }
     }
 
+    public EquipmentHolder Equipment
+    {
+        get { return equipment; }
+    }
+
     public override void _Ready()
     {
         grid = GetTree().GetRoot().GetNode("Game/Grid") as Grid;
@@ -37,6 +43,7 @@ public class Player : Node2D
         playerInput = GetNode("PlayerInput") as PlayerInput;
         stats = GetNode("Stats") as Stats;
         inventory = GetNode("Inventory") as Inventory;
+        equipment = GetNode("Equipment") as EquipmentHolder;
 
         turnManager.Turns.Add(this);
     }

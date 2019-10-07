@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Enities/Items/Equipment/BaseEquipment.tscn" type="PackedScene" id=1]
+
+[node name="SmellyRobe" instance=ExtResource( 1 )]
+selectedTypeOfItem = 2
+itemName = "Smelly Robe"
+Defense = 1
+SelectedTypeOfEquipment = 1

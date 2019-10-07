@@ -1,28 +1,34 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Game.cs" type="Script" id=1]
 [ext_resource path="res://Enities/Scorpion.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Dungeon/Door.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Dungeon/Chest.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Enities/Items/Keys/SilverKey.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Enities/Player.tscn" type="PackedScene" id=6]
-[ext_resource path="res://tilesheet.png" type="Texture" id=7]
-[ext_resource path="res://Dungeon/Grid.cs" type="Script" id=8]
-[ext_resource path="res://Scripts/TurnTimer.cs" type="Script" id=9]
-[ext_resource path="res://GUI/window6_130.png" type="Texture" id=10]
-[ext_resource path="res://GUI/font.tres" type="DynamicFont" id=11]
-[ext_resource path="res://GUI/weapon_icon.png" type="Texture" id=12]
-[ext_resource path="res://GUI/armor_icon.png" type="Texture" id=13]
-[ext_resource path="res://GUI/ItemContainer.cs" type="Script" id=14]
-[ext_resource path="res://GUI/potion_icon.png" type="Texture" id=15]
-[ext_resource path="res://GUI/small_key_icon.png" type="Texture" id=16]
-[ext_resource path="res://GUI/master_key_icon.png" type="Texture" id=17]
-[ext_resource path="res://GUI/Console.cs" type="Script" id=18]
-[ext_resource path="res://GUI/Message.tscn" type="PackedScene" id=19]
+[ext_resource path="res://Enities/Items/Potions/Potion.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Enities/Items/Equipment/RustySword.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Enities/Items/Equipment/SmellyRobe.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Enities/Items/Equipment/RustFreeSword.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Enities/Player.tscn" type="PackedScene" id=7]
+[ext_resource path="res://tilesheet.png" type="Texture" id=8]
+[ext_resource path="res://Dungeon/Grid.cs" type="Script" id=9]
+[ext_resource path="res://Scripts/TurnTimer.cs" type="Script" id=10]
+[ext_resource path="res://GUI/window6_130.png" type="Texture" id=11]
+[ext_resource path="res://GUI/PlayerInfo.cs" type="Script" id=12]
+[ext_resource path="res://GUI/font.tres" type="DynamicFont" id=13]
+[ext_resource path="res://GUI/EquipmentIcons.cs" type="Script" id=14]
+[ext_resource path="res://GUI/weapon_icon.png" type="Texture" id=15]
+[ext_resource path="res://GUI/armor_icon.png" type="Texture" id=16]
+[ext_resource path="res://GUI/ItemContainer.cs" type="Script" id=17]
+[ext_resource path="res://GUI/potion_icon.png" type="Texture" id=18]
+[ext_resource path="res://GUI/small_key_icon.png" type="Texture" id=19]
+[ext_resource path="res://GUI/master_key_icon.png" type="Texture" id=20]
+[ext_resource path="res://GUI/Console.cs" type="Script" id=21]
+[ext_resource path="res://GUI/Message.tscn" type="PackedScene" id=22]
+[ext_resource path="res://GUI/EquipMenu.cs" type="Script" id=23]
+[ext_resource path="res://GUI/EquipmentButton.tscn" type="PackedScene" id=24]
+[ext_resource path="res://GUI/close_icon.png" type="Texture" id=25]
 
 [sub_resource type="TileSet" id=1]
 0/name = "empty"
-0/texture = ExtResource( 7 )
+0/texture = ExtResource( 8 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 0, 0, 16, 16 )
@@ -32,7 +38,7 @@
 0/shapes = [  ]
 0/z_index = 0
 1/name = "wall"
-1/texture = ExtResource( 7 )
+1/texture = ExtResource( 8 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
 1/region = Rect2( 0, 221, 16, 16 )
@@ -45,11 +51,12 @@
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
 scorpionScene = ExtResource( 2 )
-doorScene = ExtResource( 3 )
-chestScene = ExtResource( 4 )
-silverKeyScene = ExtResource( 5 )
+potionScene = ExtResource( 3 )
+weaponScene = ExtResource( 4 )
+armorScene = ExtResource( 5 )
+secondWeaponScene = ExtResource( 6 )
 
-[node name="Player" parent="." instance=ExtResource( 6 )]
+[node name="Player" parent="." instance=ExtResource( 7 )]
 position = Vector2( 239, 131 )
 
 [node name="Grid" type="TileMap" parent="."]
@@ -57,14 +64,14 @@ position = Vector2( -8, -8 )
 tile_set = SubResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
-script = ExtResource( 8 )
+script = ExtResource( 9 )
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="TurnTimer" type="Timer" parent="."]
 wait_time = 0.05
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -83,7 +90,7 @@ margin_left = -115.0
 margin_top = -1.0
 margin_right = 1.0
 margin_bottom = 1.0
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
@@ -93,18 +100,19 @@ patch_margin_bottom = 6
 editor/display_folded = true
 margin_right = 116.0
 margin_bottom = 109.0
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
 patch_margin_bottom = 6
+script = ExtResource( 12 )
 
 [node name="PlayerName" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 110.0
 margin_bottom = 22.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "PlayerName"
 
 [node name="LVLContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
@@ -118,14 +126,14 @@ custom_constants/separation = 6
 [node name="LVL" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/LVLContainer"]
 margin_right = 35.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "LVL:"
 
 [node name="CurrentLVL" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/LVLContainer"]
 margin_left = 41.0
 margin_right = 60.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "69"
 
 [node name="HPContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
@@ -138,28 +146,28 @@ margin_bottom = 61.0
 [node name="HP" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/HPContainer"]
 margin_right = 26.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "HP:"
 
 [node name="CurrentHP" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/HPContainer"]
 margin_left = 30.0
 margin_right = 49.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "69"
 
 [node name="Seperator" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/HPContainer"]
 margin_left = 53.0
 margin_right = 62.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "/"
 
 [node name="MaxHP" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/HPContainer"]
 margin_left = 66.0
 margin_right = 85.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "69"
 
 [node name="STRContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
@@ -173,14 +181,14 @@ custom_constants/separation = 6
 [node name="STR" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/STRContainer"]
 margin_right = 38.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "STR:"
 
 [node name="CurrentSTR" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/STRContainer"]
 margin_left = 44.0
 margin_right = 63.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "69"
 
 [node name="DEFContainer" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/PlayerInfo"]
@@ -193,33 +201,33 @@ custom_constants/separation = 6
 [node name="DEF" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/DEFContainer"]
 margin_right = 36.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "DEF:"
 
 [node name="CurrentDEF" type="Label" parent="CanvasLayer/GUI/SideMenu/PlayerInfo/DEFContainer"]
 margin_left = 42.0
 margin_right = 61.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "69"
 
 [node name="Equipment" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
-editor/display_folded = true
 margin_top = 102.0
 margin_right = 116.0
 margin_bottom = 171.0
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
 patch_margin_bottom = 6
+script = ExtResource( 14 )
 
 [node name="Label" type="Label" parent="CanvasLayer/GUI/SideMenu/Equipment"]
 margin_left = 3.0
 margin_top = 10.0
 margin_right = 113.0
 margin_bottom = 26.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "Equipment"
 align = 1
 
@@ -232,31 +240,32 @@ margin_right = -17.0
 margin_bottom = -29.0
 alignment = 1
 
-[node name="TextureButton" type="TextureButton" parent="CanvasLayer/GUI/SideMenu/Equipment/HBoxContainer"]
+[node name="WeaponButton" type="TextureButton" parent="CanvasLayer/GUI/SideMenu/Equipment/HBoxContainer"]
 margin_left = 7.0
 margin_right = 39.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture_normal = ExtResource( 12 )
-texture_pressed = ExtResource( 12 )
-texture_hover = ExtResource( 12 )
+texture_normal = ExtResource( 15 )
+texture_pressed = ExtResource( 15 )
+texture_hover = ExtResource( 15 )
 expand = true
 
-[node name="TextureButton2" type="TextureButton" parent="CanvasLayer/GUI/SideMenu/Equipment/HBoxContainer"]
+[node name="ArmorButton" type="TextureButton" parent="CanvasLayer/GUI/SideMenu/Equipment/HBoxContainer"]
 margin_left = 43.0
 margin_right = 75.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
-texture_normal = ExtResource( 13 )
-texture_pressed = ExtResource( 13 )
-texture_hover = ExtResource( 13 )
+texture_normal = ExtResource( 16 )
+texture_pressed = ExtResource( 16 )
+texture_hover = ExtResource( 16 )
 expand = true
 
 [node name="Items" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
+editor/display_folded = true
 margin_top = 165.0
 margin_right = 116.0
 margin_bottom = 263.0
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
@@ -267,7 +276,7 @@ margin_left = 3.0
 margin_top = 10.0
 margin_right = 113.0
 margin_bottom = 26.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "Items"
 align = 1
 
@@ -277,7 +286,7 @@ margin_top = 29.0
 margin_right = 91.0
 margin_bottom = 93.0
 custom_constants/separation = 8
-script = ExtResource( 14 )
+script = ExtResource( 17 )
 
 [node name="Potions" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer"]
 margin_right = 65.0
@@ -287,20 +296,20 @@ custom_constants/separation = 5
 [node name="Icon" type="TextureRect" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/Potions"]
 margin_right = 16.0
 margin_bottom = 16.0
-texture = ExtResource( 15 )
+texture = ExtResource( 18 )
 
 [node name="Seperator" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/Potions"]
 margin_left = 21.0
 margin_right = 32.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "x"
 
 [node name="Amount" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/Potions"]
 margin_left = 37.0
 margin_right = 46.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "0"
 
 [node name="SimpleKeys" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer"]
@@ -312,20 +321,20 @@ custom_constants/separation = 5
 [node name="Icon" type="TextureRect" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/SimpleKeys"]
 margin_right = 16.0
 margin_bottom = 16.0
-texture = ExtResource( 16 )
+texture = ExtResource( 19 )
 
 [node name="Seperator" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/SimpleKeys"]
 margin_left = 21.0
 margin_right = 32.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "x"
 
 [node name="Amount" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/SimpleKeys"]
 margin_left = 37.0
 margin_right = 46.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "0"
 
 [node name="MasterKeys" type="HBoxContainer" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer"]
@@ -337,20 +346,20 @@ custom_constants/separation = 5
 [node name="Icon" type="TextureRect" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/MasterKeys"]
 margin_right = 16.0
 margin_bottom = 16.0
-texture = ExtResource( 17 )
+texture = ExtResource( 20 )
 
 [node name="Seperator" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/MasterKeys"]
 margin_left = 21.0
 margin_right = 32.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "x"
 
 [node name="Amount" type="Label" parent="CanvasLayer/GUI/SideMenu/Items/ItemContainer/MasterKeys"]
 margin_left = 37.0
 margin_right = 46.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 11 )
+custom_fonts/font = ExtResource( 13 )
 text = "0"
 
 [node name="Console" type="NinePatchRect" parent="CanvasLayer/GUI"]
@@ -358,13 +367,13 @@ margin_left = -1.0
 margin_top = 256.0
 margin_right = 527.0
 margin_bottom = 361.0
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
 patch_margin_bottom = 6
-script = ExtResource( 18 )
-messageScene = ExtResource( 19 )
+script = ExtResource( 21 )
+messageScene = ExtResource( 22 )
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/GUI/Console"]
 anchor_right = 1.0
@@ -378,4 +387,120 @@ scroll_horizontal_enabled = false
 [node name="TextContainer" type="VBoxContainer" parent="CanvasLayer/GUI/Console/ScrollContainer"]
 margin_right = 500.0
 rect_min_size = Vector2( 500, 0 )
+
+[node name="EquipMenu" type="NinePatchRect" parent="CanvasLayer/GUI"]
+margin_left = 88.0
+margin_top = 45.0
+margin_right = 433.0
+margin_bottom = 234.0
+texture = ExtResource( 11 )
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6
+script = ExtResource( 23 )
+equipmentButtonScene = ExtResource( 24 )
+
+[node name="Equipment" type="Label" parent="CanvasLayer/GUI/EquipMenu"]
+anchor_right = 1.0
+margin_top = 10.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 13 )
+text = "Equipment"
+align = 1
+
+[node name="CurrentlyEquippedContainer" type="HBoxContainer" parent="CanvasLayer/GUI/EquipMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 33.0
+margin_right = -10.0
+margin_bottom = -140.0
+
+[node name="Current" type="Label" parent="CanvasLayer/GUI/EquipMenu/CurrentlyEquippedContainer"]
+margin_right = 71.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 13 )
+text = "Current: "
+
+[node name="Equipment" type="Label" parent="CanvasLayer/GUI/EquipMenu/CurrentlyEquippedContainer"]
+margin_left = 75.0
+margin_right = 202.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 13 )
+text = "EquipmentName"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/GUI/EquipMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 60.0
+margin_right = -133.0
+margin_bottom = -10.0
+scroll_horizontal_enabled = false
+
+[node name="EquipmentContainer" type="VBoxContainer" parent="CanvasLayer/GUI/EquipMenu/ScrollContainer"]
+
+[node name="StatBox" type="Control" parent="CanvasLayer/GUI/EquipMenu"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -76.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GUI/EquipMenu/StatBox"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 13.0
+margin_right = 13.0
+alignment = 1
+
+[node name="STRContainer" type="HBoxContainer" parent="CanvasLayer/GUI/EquipMenu/StatBox/VBoxContainer"]
+margin_top = 76.0
+margin_right = 76.0
+margin_bottom = 92.0
+
+[node name="STR" type="Label" parent="CanvasLayer/GUI/EquipMenu/StatBox/VBoxContainer/STRContainer"]
+margin_right = 38.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 13 )
+text = "STR:"
+
+[node name="CurrentSTR" type="Label" parent="CanvasLayer/GUI/EquipMenu/StatBox/VBoxContainer/STRContainer"]
+margin_left = 42.0
+margin_right = 61.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 13 )
+text = "69"
+
+[node name="DEFContainer" type="HBoxContainer" parent="CanvasLayer/GUI/EquipMenu/StatBox/VBoxContainer"]
+margin_top = 96.0
+margin_right = 76.0
+margin_bottom = 112.0
+
+[node name="DEF" type="Label" parent="CanvasLayer/GUI/EquipMenu/StatBox/VBoxContainer/DEFContainer"]
+margin_right = 36.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 13 )
+text = "DEF:"
+
+[node name="CurrentDEF" type="Label" parent="CanvasLayer/GUI/EquipMenu/StatBox/VBoxContainer/DEFContainer"]
+margin_left = 40.0
+margin_right = 59.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 13 )
+text = "69"
+
+[node name="CloseButton" type="TextureButton" parent="CanvasLayer/GUI/EquipMenu"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -30.0
+margin_top = 10.0
+margin_right = -30.0
+margin_bottom = 20.0
+texture_normal = ExtResource( 25 )
+texture_pressed = ExtResource( 25 )
+texture_hover = ExtResource( 25 )
 [connection signal="timeout" from="TurnTimer" to="TurnTimer" method="_on_TurnTimer_timeout"]
+[connection signal="pressed" from="CanvasLayer/GUI/SideMenu/Equipment/HBoxContainer/WeaponButton" to="CanvasLayer/GUI/SideMenu/Equipment" method="_on_WeaponButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/GUI/SideMenu/Equipment/HBoxContainer/ArmorButton" to="CanvasLayer/GUI/SideMenu/Equipment" method="_on_ArmorButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/GUI/EquipMenu/CloseButton" to="CanvasLayer/GUI/EquipMenu" method="_on_CloseButton_pressed"]

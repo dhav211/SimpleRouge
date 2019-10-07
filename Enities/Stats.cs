@@ -3,10 +3,23 @@ using System;
 
 public class Stats : Node2D
 {
+    [Export] public string EntityName { get; set; }
     [Export] public int Health { get; set; }
     [Export] public int Strength { get; set; }
+    [Export] public int BaseStrength { get; set; }
     [Export] public int Defense { get; set; }
-    public int CurrentHealth { get; set; }
+    [Export] public int BaseDefense { get; set; }
+    [Export] public int Level { get; set; }
+    int currentHealth; 
+    public int CurrentHealth
+    {
+        get { return currentHealth; }
+        set 
+        {
+            currentHealth = value;
+            CheckIfCurrentHealthIsInBound();
+        }
+    }
 
     public override void _Ready()
     {
@@ -25,5 +38,10 @@ public class Stats : Node2D
         {
             CurrentHealth = Health;
         }
+    }
+
+    public void CallForUpdateOfPlayerCurrentHP()
+    {
+        GetTree().CallGroup("PlayerInfo", "UpdatePlayerCurrentHP");
     }
 }

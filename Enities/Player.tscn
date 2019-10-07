@@ -1,12 +1,14 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Enities/Player.cs" type="Script" id=1]
 [ext_resource path="res://tilesheet.png" type="Texture" id=2]
-[ext_resource path="res://Enities/Stats.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Enities/MovementCursor.cs" type="Script" id=4]
-[ext_resource path="res://Enities/PlayerInput.cs" type="Script" id=5]
-[ext_resource path="res://Enities/Inventory.cs" type="Script" id=6]
-[ext_resource path="res://Scripts/Camera.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Enities/EquipmentHolder.cs" type="Script" id=3]
+[ext_resource path="res://Enities/Stats.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Enities/MovementCursor.cs" type="Script" id=5]
+[ext_resource path="res://Enities/PlayerInput.cs" type="Script" id=6]
+[ext_resource path="res://Enities/Items/Potions/Potion.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Enities/Inventory.cs" type="Script" id=8]
+[ext_resource path="res://Scripts/Camera.tscn" type="PackedScene" id=9]
 
 [node name="Player" type="Node2D"]
 script = ExtResource( 1 )
@@ -16,7 +18,14 @@ texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 459, 0, 16, 16 )
 
-[node name="Stats" parent="." instance=ExtResource( 3 )]
+[node name="Equipment" type="Node2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="Stats" parent="." instance=ExtResource( 4 )]
+EntityName = "Daniel"
+BaseStrength = 5
+BaseDefense = 4
+Level = 1
 
 [node name="MovementCursor" type="Sprite" parent="."]
 position = Vector2( 0, 16 )
@@ -24,15 +33,16 @@ rotation = 3.14159
 texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 391, 340, 16, 16 )
-script = ExtResource( 4 )
-
-[node name="PlayerInput" type="Node2D" parent="."]
 script = ExtResource( 5 )
 
-[node name="Inventory" type="Node2D" parent="."]
+[node name="PlayerInput" type="Node2D" parent="."]
 script = ExtResource( 6 )
+potionScene = ExtResource( 7 )
 
-[node name="Camera" parent="." instance=ExtResource( 7 )]
+[node name="Inventory" type="Node2D" parent="."]
+script = ExtResource( 8 )
+
+[node name="Camera" parent="." instance=ExtResource( 9 )]
 offset = Vector2( 25, 5 )
 zoom = Vector2( 0.85, 0.75 )
 

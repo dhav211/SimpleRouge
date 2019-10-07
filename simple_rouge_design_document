@@ -106,6 +106,13 @@ More sophiscated Generation, with halls and multple rooms will be established in
 -- Leveling Up --
 
 -- UI / Inventory System --
+1. For equipment menu, when the icon for Weapon or Armor is clicked the equip menu will be made visible.
+2. The icon buttons will send information to the equipment menu telling it what to do.
+3. It needs to set the name of the type of equipment it is setting at the top.
+4. Next a foreach loop needs to be ran for the inventory.
+5. It will check for any equipment that is of the given type, if it is equipped it will set the label of the currently equipped item.
+6. For any unequipped weapons if will add a button to the scroll container in equipment menu.
+7. When button is clicked, the equipment will be equipped and the menu will close.
 
 -- Console --
 

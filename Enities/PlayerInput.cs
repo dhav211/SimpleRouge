@@ -10,7 +10,12 @@ public class PlayerInput : Node2D
     Timer attackTimer;
     Grid grid;
     Console console;
+    PlayerInfo playerInfo;
     Attack attack = new Attack();
+
+    // Since potion using is just one potion in this game, we can use a potion scene here for checking if one is in inventory
+    [Export] PackedScene potionScene;
+    ConsumableItem potion;
 
     public override void _Ready()
     {
@@ -18,8 +23,10 @@ public class PlayerInput : Node2D
         turnManager =  GetNode("/root/TurnManager") as TurnManager;
         grid = GetTree().GetRoot().GetNode("Game/Grid") as Grid;
         console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
+        playerInfo = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/SideMenu/PlayerInfo") as PlayerInfo;
         movementCursor = GetParent().GetNode("MovementCursor") as MovementCursor;
         attackTimer = GetParent().GetNode("AttackTimer") as Timer;
+        potion = potionScene.Instance() as ConsumableItem;
     }
 
     public override void _Input(InputEvent @event)
@@ -83,6 +90,25 @@ public class PlayerInput : Node2D
                 turnManager.EmitSignal("turn_completed");
             }
         }
+
+        UsePotion(_keyboardInput);
+    }
+
+    private void UsePotion(InputEventKey _keyboardInput)
+    {
+        if (_keyboardInput.IsActionPressed("ui_select"))
+        {
+            if (player.Inventory.IsItemInIventory(potion))
+            {
+                player.Stats.CurrentHealth += potion.GetRestoreAmount(player);
+                player.Stats.CallForUpdateOfPlayerCurrentHP();
+                player.Inventory.RemoveItem(potion);
+            }
+            else
+            {
+                console.PrintMessageToConsole("Player doesn't have any potions!");
+            }
+        }
     }
 
     private Vector2 GetKeyboardMoveToPosition(InputEventKey _keyboardInput)
@@ -144,7 +170,7 @@ public class PlayerInput : Node2D
         if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Enemy)
         {
             Enemy occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Enemy;
-            attack.AttackTarget(player, occupant, console);
+            attack.AttackTarget(player, occupant, console, grid.Random);
             await ToSignal(attackTimer, "timeout");
         }
         else if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Door)

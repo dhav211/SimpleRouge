@@ -28,7 +28,6 @@ public class Inventory : Node2D
         {
             itemContainer.UpdateItemContainer(_itemToAdd);
         }
-            // Update item container
     }
 
     public void RemoveItem(Item _itemToRemove)
@@ -42,7 +41,6 @@ public class Inventory : Node2D
                 {
                     itemContainer.UpdateItemContainer(_itemToRemove);
                 }
-                    // Update item container
                 break;
             }
         }

@@ -69,14 +69,14 @@ public class DungeonGenerator
 
                     int lockChance = random.Next(0,11);
                     Door.LockState lockState;
-                    if (lockChance >= 0 && room.roomNumber != 0)
+                    if (lockChance >= 7 && room.roomNumber != 0)
                     {
                         key = silverKeyScene.Instance() as Key;
                         lockState = Door.LockState.Locked;
 
                         int spawnChestChance = random.Next(0,11);
 
-                        if (spawnChestChance > 6)
+                        if (spawnChestChance >= 7)
                             SetChestWithKey(room.roomNumber, _rooms, door, roomsWithChest, key);
                     }
                     else
