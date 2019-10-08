@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Enities/Items/Loot.cs" type="Script" id=1]
+[ext_resource path="res://monochrome_transparent.png" type="Texture" id=2]
+
+[node name="Loot" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 221, 442, 16, 16 )

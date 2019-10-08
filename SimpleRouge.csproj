@@ -62,7 +62,9 @@
     <Compile Include="Enities\Inventory.cs" />
     <Compile Include="Enities\Item.cs" />
     <Compile Include="Enities\Items\Equipment\Equipment.cs" />
+    <Compile Include="Enities\Items\Loot.cs" />
     <Compile Include="Enities\Key.cs" />
+    <Compile Include="Enities\LootDrop.cs" />
     <Compile Include="Enities\MovementCursor.cs" />
     <Compile Include="Enities\Pathfinding.cs" />
     <Compile Include="Enities\Player.cs" />

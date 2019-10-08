@@ -18,7 +18,6 @@ public class Door : Node2D
         sprite = GetNode("Sprite") as Sprite;
         console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
         Position = positionToSet;
-        Key m_key = KeyRequired;
     }
 
     public void InitializeDoor(Grid _grid, LockState _lockState, Vector2 _position, Key _keyRequired)

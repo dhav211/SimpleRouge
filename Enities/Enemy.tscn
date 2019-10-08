@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Enities/Enemy.cs" type="Script" id=1]
 [ext_resource path="res://tilesheet.png" type="Texture" id=2]
 [ext_resource path="res://Enities/Stats.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Enities/PlayerSpottedIndicator.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Enities/LootDrop.cs" type="Script" id=5]
+[ext_resource path="res://Enities/Items/Loot.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Enities/Items/Potions/Potion.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Enities/Items/Keys/SilverKey.tscn" type="PackedScene" id=8]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Death"
@@ -67,4 +71,10 @@ anims/Death = SubResource( 1 )
 
 [node name="AttackTimer" type="Timer" parent="."]
 wait_time = 0.7
+
+[node name="LootDrop" type="Node2D" parent="."]
+script = ExtResource( 5 )
+lootScene = ExtResource( 6 )
+potion = ExtResource( 7 )
+key = ExtResource( 8 )
 [connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]

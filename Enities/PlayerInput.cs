@@ -183,6 +183,12 @@ public class PlayerInput : Node2D
             Chest occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Chest;
             occupant.OpenChest(player);
         }
+        else if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Loot)
+        {
+            Loot occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Loot;
+            player.Inventory.AddItem(occupant.ItemContained);
+            occupant.QueueFree();
+        }
         // TODO add interaction with doors, chests, items, etc here
     }
 

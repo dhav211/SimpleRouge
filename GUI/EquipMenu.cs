@@ -9,6 +9,8 @@ public class EquipMenu : NinePatchRect
     Label strengthText;
     Label defenseText;
     Player player;
+    public int PlayerStrength { get; set; }
+    public int PlayerDefense { get; set; }
 
     public Label StrengthText
     {
@@ -37,8 +39,10 @@ public class EquipMenu : NinePatchRect
     {
         Visible = true;
         // Set player stat info back to default
-        strengthText.Text = player.Stats.Strength.ToString();
-        defenseText.Text = player.Stats.Defense.ToString();
+        PlayerStrength = player.Stats.Strength;
+        PlayerDefense = player.Stats.Defense;
+        strengthText.Text = PlayerStrength.ToString();
+        defenseText.Text = PlayerDefense.ToString();
         strengthText.AddColorOverride("font_color", Color.ColorN("White"));
         defenseText.AddColorOverride("font_color", Color.ColorN("White"));
 

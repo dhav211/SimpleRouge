@@ -19,6 +19,7 @@ public class Enemy : Node2D
     Stats stats;
     Console console;
     Timer attackTimer;
+    LootDrop lootDrop;
     Attack attack = new Attack();
 
     public Stats Stats
@@ -40,6 +41,7 @@ public class Enemy : Node2D
         console = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/Console") as Console;
         stats = GetNode("Stats") as Stats;
         attackTimer = GetNode("AttackTimer") as Timer;
+        lootDrop = GetNode("LootDrop") as LootDrop;
         turnManager.Turns.Add(this);
         pathfinding.InitializePathfinding(grid, player);
 
@@ -264,6 +266,7 @@ public class Enemy : Node2D
         Visible = false;
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = false; // sets isOccupied on old grid position on tileGrid to true
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = null;
+        lootDrop.DropLoot(grid.Random, grid);
     }
 
     private void _on_Enemy_turn_completed()

@@ -57,7 +57,7 @@ public class EquipmentButton : Button
         // set stats back to defualt in equip menu
         equipMenu.StrengthText.AddColorOverride("font_color", Color.ColorN("White"));
         equipMenu.DefenseText.AddColorOverride("font_color", Color.ColorN("White"));
-        equipMenu.StrengthText.Text = player.Stats.Strength.ToString();
-        equipMenu.DefenseText.Text = player.Stats.Defense.ToString();
+        equipMenu.StrengthText.Text = equipMenu.PlayerStrength.ToString();
+        equipMenu.DefenseText.Text = equipMenu.PlayerDefense.ToString();
     }
 }
