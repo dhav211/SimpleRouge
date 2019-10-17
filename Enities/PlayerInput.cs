@@ -189,6 +189,11 @@ public class PlayerInput : Node2D
             player.Inventory.AddItem(occupant.ItemContained);
             occupant.QueueFree();
         }
+        else if (grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant is Stairs)
+        {
+            Stairs occupant = grid.TileGrid[(int)_moveToPosition.x, (int)_moveToPosition.y].Occupant as Stairs;
+            // Get the player going to the next level
+        }
         // TODO add interaction with doors, chests, items, etc here
     }
 

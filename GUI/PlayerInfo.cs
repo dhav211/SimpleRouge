@@ -20,14 +20,15 @@ public class PlayerInfo : NinePatchRect
         playerSTR = GetNode("STRContainer/CurrentSTR") as Label;
         playerDEF = GetNode("DEFContainer/CurrentDEF") as Label;
 
-        player = GetTree().GetRoot().GetNode("Game/Player") as Player;
+        //player = GetTree().GetRoot().GetNode("Game/Player") as Player;
         AddToGroup("PlayerInfo");
-        FillLabels();
     }
 
-    private void FillLabels()
+    public  void FillLabels(Player _player)
     // Done at start of game, fills out every label with what is found in player stats.
     {
+        player = _player;
+
         playerName.Text = player.Stats.EntityName;
         playerLVL.Text = player.Stats.Level.ToString();
         playerCurrentHP.Text = player.Stats.CurrentHealth.ToString();

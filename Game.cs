@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class Game : Node2D
 {
@@ -7,7 +8,11 @@ public class Game : Node2D
     Grid grid;
     TurnManager turnManager;
     Random random = new Random();
+    Grid[] floors = new Grid[5];
+    public int CurrentFloor { get; set; }
 
+    [Export] PackedScene gridScene;
+    [Export] PackedScene playerScene;
     [Export] PackedScene scorpionScene;
     [Export] PackedScene potionScene;
     [Export] PackedScene weaponScene;
@@ -21,16 +26,19 @@ public class Game : Node2D
 
     public override void _Ready()
     {
-        grid = GetNode("Grid") as Grid;
         turnManager = GetNode("/root/TurnManager") as TurnManager;
         SetUpGame();
     }
 
     public void SetUpGame()  // Temp method!
     {
+        CurrentFloor = 0;
+
+        GenerateDungeon();
         SetUpGrid();
 
-        Player player = GetNode("Player") as Player;
+        Player player = playerScene.Instance() as Player;
+        AddChild(player);
 
         foreach (Tile tile in grid.TileGrid)
         {
@@ -56,14 +64,44 @@ public class Game : Node2D
         turnManager.RunTurns();
     }
 
-    private void SetUpGrid()
+    private void GenerateDungeon()
     {
-        grid.DungeonGenerator.GenerateDungeon();
+        for (int i = 0; i < floors.Length; ++i)
+        {
+            floors[i] = gridScene.Instance() as Grid;
+            floors[i].InitilaizeGrid(random);
+            floors[i].DungeonGenerator.GenerateDungeon(i + 1);  // Requires a + 1 because the dungeon generator doesn't start at 0
+        }
+    }
+
+    public void SetUpGrid()
+    {
+        grid = floors[CurrentFloor];
+        AddChild(grid);
         grid.SetTileMap();
         grid.SetDoors();
         grid.SetChests();
-        AddEnemies(10);
+        grid.SetStairs();
+        //AddEnemies(10);
         //grid.AddTilesAsChildren();
+    }
+
+    public void ClearGrid()
+    {
+        grid.QueueFree();
+    }
+
+    public void SetPlayerFromStairs(Stairs.StairDirection _comingFromDirection)
+    {
+        if (_comingFromDirection == Stairs.StairDirection.Up)
+        {
+            // Find the stairs with direction down and spawn player there
+            
+        }
+        else if (_comingFromDirection == Stairs.StairDirection.Down)
+        {
+            // Find the stairs with direction up and spawn player there
+        }
     }
 
     private void AddEnemies(int _amount)

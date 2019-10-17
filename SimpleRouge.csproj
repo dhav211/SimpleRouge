@@ -55,6 +55,7 @@
     <Compile Include="Dungeon\DungeonGenerator.cs" />
     <Compile Include="Dungeon\Grid.cs" />
     <Compile Include="Dungeon\Level.cs" />
+    <Compile Include="Dungeon\Stairs.cs" />
     <Compile Include="Dungeon\Tile.cs" />
     <Compile Include="Enities\ConsumableItem.cs" />
     <Compile Include="Enities\Enemy.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="GUI\EquipMenu.cs" />
     <Compile Include="GUI\ItemContainer.cs" />
     <Compile Include="GUI\PlayerInfo.cs" />
+    <Compile Include="GUI\SideMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts/Attack.cs" />
     <Compile Include="Scripts\Camera.cs" />

@@ -26,13 +26,18 @@ public class EquipMenu : NinePatchRect
 
     public override void _Ready()
     {
-        player = GetTree().GetRoot().GetNode("Game/Player") as Player;
+        //player = GetTree().GetRoot().GetNode("Game/Player") as Player;
         currentlyEquipped = GetNode("CurrentlyEquippedContainer/Equipment") as Label;
         equipmentContainer = GetNode("ScrollContainer/EquipmentContainer") as VBoxContainer;
         strengthText = GetNode("StatBox/VBoxContainer/STRContainer/CurrentSTR") as Label;
         defenseText = GetNode("StatBox/VBoxContainer/DEFContainer/CurrentDEF") as Label;
-
+        AddToGroup("EquipMenu");
         Visible = false;
+    }
+
+    public void SetPlayer(Player _player)
+    {
+        player = _player;
     }
 
     public void OpenMenu(Equipment.TypeOfEquipment _type)

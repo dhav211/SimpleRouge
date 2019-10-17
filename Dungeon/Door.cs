@@ -24,13 +24,16 @@ public class Door : Node2D
     {
         grid = _grid;
 
-        //Position = new Vector2(_gridPosition.x * 16 + 8, _gridPosition.y * 16 + 8);
         positionToSet = _position;
         gridPosition = new Vector2(Mathf.FloorToInt(positionToSet.x /16), Mathf.FloorToInt(positionToSet.y /16));
-        grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = true;
-        grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = this;
         KeyRequired = _keyRequired;
         currentLockState = _lockState;
+    }
+
+    public void SetDoor()
+    {
+        grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = true;
+        grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = this;
     }
 
     public void OpenDoor(Player _player)

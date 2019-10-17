@@ -29,9 +29,14 @@ public class Chest : Node2D
 
         positionToSet = _position;
         gridPosition = new Vector2(Mathf.FloorToInt(positionToSet.x /16), Mathf.FloorToInt(positionToSet.y /16));
+        
+        itemInside = _itemInside;
+    }
+
+    public void SetChest()
+    {
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].IsOccupied = true;
         grid.TileGrid[(int)gridPosition.x, (int)gridPosition.y].Occupant = this;
-        itemInside = _itemInside;
     }
 
     public void OpenChest(Player _player)

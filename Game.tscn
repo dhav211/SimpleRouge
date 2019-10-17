@@ -1,16 +1,16 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Game.cs" type="Script" id=1]
-[ext_resource path="res://Enities/Scorpion.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Enities/Items/Potions/Potion.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Enities/Items/Equipment/RustySword.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Enities/Items/Equipment/SmellyRobe.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Enities/Items/Equipment/RustFreeSword.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Enities/Player.tscn" type="PackedScene" id=7]
-[ext_resource path="res://tilesheet.png" type="Texture" id=8]
-[ext_resource path="res://Dungeon/Grid.cs" type="Script" id=9]
-[ext_resource path="res://Scripts/TurnTimer.cs" type="Script" id=10]
-[ext_resource path="res://GUI/window6_130.png" type="Texture" id=11]
+[ext_resource path="res://Dungeon/Grid.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Enities/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Enities/Scorpion.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Enities/Items/Potions/Potion.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Enities/Items/Equipment/RustySword.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Enities/Items/Equipment/SmellyRobe.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Enities/Items/Equipment/RustFreeSword.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Scripts/TurnTimer.cs" type="Script" id=9]
+[ext_resource path="res://GUI/window6_130.png" type="Texture" id=10]
+[ext_resource path="res://GUI/SideMenu.cs" type="Script" id=11]
 [ext_resource path="res://GUI/PlayerInfo.cs" type="Script" id=12]
 [ext_resource path="res://GUI/font.tres" type="DynamicFont" id=13]
 [ext_resource path="res://GUI/EquipmentIcons.cs" type="Script" id=14]
@@ -26,54 +26,22 @@
 [ext_resource path="res://GUI/EquipmentButton.tscn" type="PackedScene" id=24]
 [ext_resource path="res://GUI/close_icon.png" type="Texture" id=25]
 
-[sub_resource type="TileSet" id=1]
-0/name = "empty"
-0/texture = ExtResource( 8 )
-0/tex_offset = Vector2( 0, 0 )
-0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 16, 16 )
-0/tile_mode = 0
-0/occluder_offset = Vector2( 0, 0 )
-0/navigation_offset = Vector2( 0, 0 )
-0/shapes = [  ]
-0/z_index = 0
-1/name = "wall"
-1/texture = ExtResource( 8 )
-1/tex_offset = Vector2( 0, 0 )
-1/modulate = Color( 1, 1, 1, 1 )
-1/region = Rect2( 0, 221, 16, 16 )
-1/tile_mode = 0
-1/occluder_offset = Vector2( 0, 0 )
-1/navigation_offset = Vector2( 0, 0 )
-1/shapes = [  ]
-1/z_index = 0
-
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
-scorpionScene = ExtResource( 2 )
-potionScene = ExtResource( 3 )
-weaponScene = ExtResource( 4 )
-armorScene = ExtResource( 5 )
-secondWeaponScene = ExtResource( 6 )
-
-[node name="Player" parent="." instance=ExtResource( 7 )]
-position = Vector2( 239, 131 )
-
-[node name="Grid" type="TileMap" parent="."]
-position = Vector2( -8, -8 )
-tile_set = SubResource( 1 )
-cell_size = Vector2( 16, 16 )
-format = 1
-script = ExtResource( 9 )
-__meta__ = {
-"_edit_lock_": true
-}
+gridScene = ExtResource( 2 )
+playerScene = ExtResource( 3 )
+scorpionScene = ExtResource( 4 )
+potionScene = ExtResource( 5 )
+weaponScene = ExtResource( 6 )
+armorScene = ExtResource( 7 )
+secondWeaponScene = ExtResource( 8 )
 
 [node name="TurnTimer" type="Timer" parent="."]
 wait_time = 0.05
-script = ExtResource( 10 )
+script = ExtResource( 9 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+editor/display_folded = true
 
 [node name="GUI" type="Control" parent="CanvasLayer"]
 anchor_right = 1.0
@@ -90,17 +58,18 @@ margin_left = -115.0
 margin_top = -1.0
 margin_right = 1.0
 margin_bottom = 1.0
-texture = ExtResource( 11 )
+texture = ExtResource( 10 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
 patch_margin_bottom = 6
+script = ExtResource( 11 )
 
 [node name="PlayerInfo" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
 editor/display_folded = true
 margin_right = 116.0
 margin_bottom = 109.0
-texture = ExtResource( 11 )
+texture = ExtResource( 10 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
@@ -215,7 +184,7 @@ text = "69"
 margin_top = 102.0
 margin_right = 116.0
 margin_bottom = 171.0
-texture = ExtResource( 11 )
+texture = ExtResource( 10 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
@@ -261,11 +230,10 @@ texture_hover = ExtResource( 16 )
 expand = true
 
 [node name="Items" type="NinePatchRect" parent="CanvasLayer/GUI/SideMenu"]
-editor/display_folded = true
 margin_top = 165.0
 margin_right = 116.0
 margin_bottom = 263.0
-texture = ExtResource( 11 )
+texture = ExtResource( 10 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
@@ -367,7 +335,7 @@ margin_left = -1.0
 margin_top = 256.0
 margin_right = 527.0
 margin_bottom = 361.0
-texture = ExtResource( 11 )
+texture = ExtResource( 10 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6
@@ -393,7 +361,7 @@ margin_left = 88.0
 margin_top = 45.0
 margin_right = 433.0
 margin_bottom = 234.0
-texture = ExtResource( 11 )
+texture = ExtResource( 10 )
 patch_margin_left = 6
 patch_margin_top = 6
 patch_margin_right = 6

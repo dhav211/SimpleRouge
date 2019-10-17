@@ -10,6 +10,7 @@ public class DungeonGenerator
     PackedScene doorScene;
     PackedScene chestScene;
     PackedScene silverKeyScene;
+    PackedScene stairScene;
 
     public DungeonGenerator(Grid _grid)
     {
@@ -18,12 +19,13 @@ public class DungeonGenerator
         doorScene = ResourceLoader.Load("res://Dungeon/Door.tscn") as PackedScene;
         chestScene = ResourceLoader.Load("res://Dungeon/Chest.tscn") as PackedScene;
         silverKeyScene = ResourceLoader.Load("res://Enities/Items/Keys/SilverKey.tscn") as PackedScene;
+        stairScene = ResourceLoader.Load("res://Dungeon/Stairs.tscn") as PackedScene;
     }
 
 
     // Remove chances of making a double exit
 
-    public void GenerateDungeon()
+    public void GenerateDungeon(int _floor)
     {
         List<Room> rooms = new List<Room>();
         int roomsToCreate = 20;
@@ -45,13 +47,69 @@ public class DungeonGenerator
 
         SetWalls();
         SetDoors(rooms);
+        CreateStairs(_floor, rooms);
         //CreatePillars();
     }
 
-    // Every exit will have a door.
-    // When an exit is created have it roll for a chance to create a locked door
-    // When a locked door is created, you will need to spawn a chest with a key in it.
-    // To spawn a chest, you need to get the room number for where the door is spawned, then spawn a chest in a lower room number
+    private void CreateStairs(int _floor, List<Room> _rooms)
+    {
+        // Checks which floor the generator is on and will place the required stairs in their places.
+        // Ex. First floor will only need one stairs in the last room going down, and etc.
+
+        if (_floor == 1)
+        {
+            CreateStair(_floor, _rooms, Stairs.StairDirection.Down);
+        }
+        else if (_floor > 1 && _floor < 5)
+        {
+            CreateStair(_floor, _rooms, Stairs.StairDirection.Down);
+            CreateStair(_floor, _rooms, Stairs.StairDirection.Up);
+        }
+        else if (_floor == 5)
+        {
+            CreateStair(_floor, _rooms, Stairs.StairDirection.Up);
+        }
+    }
+
+    private void CreateStair(int _floor, List<Room> _rooms, Stairs.StairDirection _direction)
+    {
+        // Here the stairs will actually be placed. It will determine it's position by the direction it's going. If it's going down then find a place in the last
+        // room. Once that is determined it will be added to the floors set of stairs.
+
+        Vector2 stairGridPosition = new Vector2();
+
+        if (_direction == Stairs.StairDirection.Down)
+        {
+            stairGridPosition = GetGridPositionForStair(_rooms[_rooms.Count - 1]);
+        }
+        else if (_direction == Stairs.StairDirection.Up)
+        {
+            stairGridPosition = GetGridPositionForStair(_rooms[0]);
+        }
+
+        Vector2 stairPosition = new Vector2(stairGridPosition.x * 16, stairGridPosition.y * 16);
+        Stairs stair = stairScene.Instance() as Stairs;
+        stair.InitializeStair(grid, stairPosition, _direction);
+
+        grid.Stairs.Add(stair);
+    }
+
+    private Vector2 GetGridPositionForStair(Room _room)
+    {
+        int randomTileNumber;
+        Vector2 randomTilePosition;
+
+        while (true)  // Loops until a random tile position that is not occupied it found.
+        {
+            randomTileNumber = random.Next(0, _room.tilesInRoom.Count);
+            randomTilePosition = _room.tilesInRoom[randomTileNumber];
+
+            if (!grid.TileGrid[(int)randomTilePosition.x, (int)randomTilePosition.y].IsOccupied)
+            {
+                return randomTilePosition;
+            }
+        }
+    }
 
     private void SetDoors(List<Room> _rooms)
     {
@@ -120,6 +178,7 @@ public class DungeonGenerator
 
         Chest chest = chestScene.Instance() as Chest;
         chest.InitializeChest(grid, _key, chestPosition);
+        
         grid.Chests.Add(chest);
     }
 
@@ -755,7 +814,7 @@ public class DungeonGenerator
     }
 }
 
-class Room
+public class Room
 {
     public Room (int _roomNumber, Vector2 _roomCenter)
     {
@@ -763,6 +822,8 @@ class Room
         roomCenter = _roomCenter;
     }
 
+    public List<Door> doors = new List<Door>();
+    public List<Chest> chests = new List<Chest>();
     public int roomNumber;
     Vector2 roomCenter = new Vector2();
     public List<Vector2> exits = new List<Vector2>();

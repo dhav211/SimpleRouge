@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://monochrome_transparent.png" type="Texture" id=1]
+[ext_resource path="res://Dungeon/Stairs.cs" type="Script" id=2]
+
+[node name="Stairs" type="Sprite"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 34, 102, 16, 16 )
+script = ExtResource( 2 )

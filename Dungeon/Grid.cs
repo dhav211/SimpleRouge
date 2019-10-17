@@ -10,6 +10,7 @@ public class Grid : TileMap
     Tile[,] tileGrid = new Tile[gridHeight, gridWidth];
     List<Door> doors = new List<Door>();
     List<Chest> chests = new List<Chest>();
+    List<Stairs> stairs = new List<Stairs>();
 
     DungeonGenerator dungeonGenerator;
     Random random = new Random();
@@ -37,6 +38,12 @@ public class Grid : TileMap
         set { chests = value; }
     }
 
+    public List<Stairs> Stairs
+    {
+        get { return stairs; }
+        set { stairs = value; }
+    }
+
     public DungeonGenerator DungeonGenerator
     {
         get { return dungeonGenerator; }
@@ -55,6 +62,12 @@ public class Grid : TileMap
 
     public override void _Ready()
     {
+        
+    }
+
+    public void InitilaizeGrid(Random _random)
+    {
+        random = _random;
         dungeonGenerator = new DungeonGenerator(this);
     }
 
@@ -85,6 +98,7 @@ public class Grid : TileMap
         foreach (Door door in doors)
         {
             AddChild(door);
+            door.SetDoor();
         }
     }
 
@@ -93,6 +107,16 @@ public class Grid : TileMap
         foreach (Chest chest in chests)
         {
             AddChild(chest);
+            chest.SetChest();
+        }
+    }
+
+    public void SetStairs()
+    {
+        foreach (Stairs stair in stairs)
+        {
+            AddChild(stair);
+            stair.SetStair();
         }
     }
 }

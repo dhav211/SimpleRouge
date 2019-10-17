@@ -10,12 +10,12 @@ public class ItemContainer : VBoxContainer
 
     public override void _Ready()
     {
-        player = GetTree().GetRoot().GetNode("Game/Player") as Player;
+        //player = GetTree().GetRoot().GetNode("Game/Player") as Player;
         potionLabel = GetNode("Potions/Amount") as Label;
         simpleKeyLabel = GetNode("SimpleKeys/Amount") as Label;
         masterKeyLabel = GetNode("MasterKeys/Amount") as Label;
-
-        InitializeItemAmounts();
+        AddToGroup("ItemContainer");
+        //InitializeItemAmounts();
     }
 
     public void UpdateItemContainer(Item _item)
@@ -53,8 +53,9 @@ public class ItemContainer : VBoxContainer
         }
     }
 
-    private void InitializeItemAmounts()
+    public void InitializeItemAmounts(Player _player)
     {
+        player = _player;
         string[] itemsToCheck = {"Potion", "SilverKey", "MasterKey"};
 
         if (player.Inventory.Items.Count != 0)

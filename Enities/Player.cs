@@ -46,6 +46,9 @@ public class Player : Node2D
         equipment = GetNode("Equipment") as EquipmentHolder;
 
         turnManager.Turns.Add(this);
+
+        SideMenu sideMenu = GetTree().GetRoot().GetNode("Game/CanvasLayer/GUI/SideMenu") as SideMenu;
+        sideMenu.SetGUIOnGameStart(this);
     }
 
     public void StartTurn()
